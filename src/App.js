@@ -8,7 +8,7 @@ import {Container, Spinner} from "react-bootstrap";
 import { useQuery } from "@apollo/client";
 import {HEALTH_QUERY} from "./graphql/queries"
 import LandingPage from "./pages/LandingPage";
-import TopNavbar from "./components/navigation/Navbar/TopNavbar";
+import TopNavbar from "./components/navigation/navbar/TopNavbar";
 
 function App() {
   const [theme, toggleTheme, componentMounted] = useDarkMode();
