@@ -1,4 +1,4 @@
-// src/components/navigation/Navbar/TopNavbar.js
+// src/components/navigation/Navbar/TopNavbar.jsx
 import React from 'react';
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";

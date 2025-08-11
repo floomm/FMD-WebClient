@@ -11,8 +11,8 @@ const LoginForm = () => {
   let renderResponse;
   const navigate = useNavigate();
   const [showPasswordAlert, setShowPasswordAlert] = useState(false);
-  const [password, setPassword] = React.useState("");
-  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const {isAuthenticated, setAuthenticated} = useAuthentication();
 
   let [login, {loading, data, error}] = useLazyQuery(TOKEN_AUTH, {

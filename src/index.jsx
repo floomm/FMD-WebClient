@@ -6,18 +6,16 @@ import { CookiesProvider } from "react-cookie";
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, from} from "@apollo/client";
 import { GRAPHQL_URL, CSRF_URL } from "./EnvConfig";
 import { RetryLink } from "@apollo/client/link/retry";
-import { Provider } from 'react-redux'
-import store from "./redux/store.js";
 
 
 const customFetch = async (uri, options) => {
-    const tokenResponsee = await fetch(CSRF_URL).then((response) => {
+    const tokenResponse = await fetch(CSRF_URL).then((response) => {
         return response.json()
     }).then(data => { return data.csrfToken })
 
     options.headers = {
         ...options.headers,
-        'X-CSRFToken': tokenResponsee,
+        'X-CSRFToken': tokenResponse,
     };
     return fetch(uri, options);
 };
@@ -42,12 +40,10 @@ const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
     <React.StrictMode>
-        <Provider store={store}>
-            <CookiesProvider>
-                <ApolloProvider client={gqlClient}>
-                    <App />
-                </ApolloProvider>
-            </CookiesProvider>
-        </Provider>
+        <CookiesProvider>
+            <ApolloProvider client={gqlClient}>
+                <App />
+            </ApolloProvider>
+        </CookiesProvider>
     </React.StrictMode>,
 );

@@ -1,4 +1,4 @@
-// src/pages/LandingPage.js
+// src/pages/LandingPage.jsx
 import Container from "react-bootstrap/esm/Container";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import AboutPage from "./AboutPage";
