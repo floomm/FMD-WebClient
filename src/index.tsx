@@ -7,17 +7,16 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, from} from "@apo
 import { GRAPHQL_URL, CSRF_URL } from "./EnvConfig";
 import { RetryLink } from "@apollo/client/link/retry";
 
+type CsrfResponse = { csrfToken: string };
 
-const customFetch = async (uri, options) => {
-    const tokenResponse = await fetch(CSRF_URL).then((response) => {
-        return response.json()
-    }).then(data => { return data.csrfToken })
+const customFetch: typeof fetch = async (uri, options) => {
+    const res = await fetch(CSRF_URL);
+    const { csrfToken } = (await res.json()) as CsrfResponse;
 
-    options.headers = {
-        ...options.headers,
-        'X-CSRFToken': tokenResponse,
-    };
-    return fetch(uri, options);
+    const headers = new Headers(options?.headers);
+    headers.set('X-CSRFToken', csrfToken);
+
+    return fetch(uri, { ...options, headers });
 };
 
 const httpLink = new HttpLink({
@@ -25,18 +24,16 @@ const httpLink = new HttpLink({
     uri: GRAPHQL_URL,
 });
 
-const additiveLink = from([
-    new RetryLink(),
-    httpLink
-]);
+const additiveLink = from([new RetryLink(), httpLink]);
 
 const gqlClient = new ApolloClient({
     link: additiveLink,
-    credentials: 'same-site',
     cache: new InMemoryCache()
 });
 
 const container = document.getElementById('root');
+if (!container) throw new Error('Root container element not found');
+
 const root = createRoot(container);
 root.render(
     <React.StrictMode>
