@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Col, Container, Form, InputGroup, Row, Spinner, ToggleButton} from "react-bootstrap";
 import {CiLocationOn} from "react-icons/ci";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Emulator} from "android-emulator-webrtc/emulator";
 
 function EmulatorView({   index,
