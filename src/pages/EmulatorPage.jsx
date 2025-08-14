@@ -1,4 +1,3 @@
-import "../assets/emulator/scss/Emulator.scss";
 import {
     Button, Col, Container, Row,
 } from "react-bootstrap";
