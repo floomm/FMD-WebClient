@@ -23,6 +23,14 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
+    /* Required by Shadcn UI */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+
     // Migration from JS (remove if fully migrated to JS)
     "allowJs": true,
     "checkJs": false
