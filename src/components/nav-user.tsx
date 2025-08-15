@@ -21,6 +21,8 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
+import {useAuth} from "@/lib/auth.tsx";
+import {useNavigate} from "react-router";
 
 export function NavUser({user,}: Readonly<{
     user: {
@@ -29,7 +31,14 @@ export function NavUser({user,}: Readonly<{
         avatar: string
     }
 }>) {
-    const {isMobile} = useSidebar()
+    const {isMobile} = useSidebar();
+    const {logOut} = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogOut = async () => {
+        await logOut();
+        navigate("/login", {replace: true});
+    }
 
     return (
         <SidebarMenu>
@@ -56,7 +65,7 @@ export function NavUser({user,}: Readonly<{
                         align="end"
                         sideOffset={4}
                     >
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onSelect={handleLogOut}>
                             <LogOut/>
                             Log out
                         </DropdownMenuItem>
@@ -64,5 +73,5 @@ export function NavUser({user,}: Readonly<{
                 </DropdownMenu>
             </SidebarMenuItem>
         </SidebarMenu>
-    )
+    );
 }
