@@ -519,28 +519,28 @@
   resolved "https://registry.yarnpkg.com/@eslint-community/regexpp/-/regexpp-4.12.1.tgz#cfc6cffe39df390a3841cde2abccf92eaa7ae0e0"
   integrity sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==
 
-"@eslint-react/ast@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/ast/-/ast-1.52.4.tgz#93517d838cc4795117c46e393506c08af0540e69"
-  integrity sha512-zsNZXrVzFhtnc+Wx6TiREwek6zKDEkFEaW1DyG6K3iR8ibGm9PuR16iYWDWsRL/YfQz9ZGHVapHO7jNthDVSvg==
+"@eslint-react/ast@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/ast/-/ast-1.52.5.tgz#7adb22b1241f71b393a997c201c611e906c7b9c8"
+  integrity sha512-FmpPSAvtG3CXW80yQLoFbmsS2INDHgkoSa4K6Dpe3pRWVdiBjNwkhJ+KcMxemzbCF92rI4t+I6V9x8hwB8XVrw==
   dependencies:
-    "@eslint-react/eff" "1.52.4"
+    "@eslint-react/eff" "1.52.5"
     "@typescript-eslint/types" "^8.39.1"
     "@typescript-eslint/typescript-estree" "^8.39.1"
     "@typescript-eslint/utils" "^8.39.1"
     string-ts "^2.2.1"
     ts-pattern "^5.8.0"
 
-"@eslint-react/core@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/core/-/core-1.52.4.tgz#4bcbfcb058b1d7ce9cab828c20ef2d51b96763e6"
-  integrity sha512-cqS4FbQ3wSowk/73+NHI21jC9sbnAbCWIAPRWe8EpM+g5yrqYMydriI1vTMO7g93LSTAknc+mGdwI/Fi8Y991A==
+"@eslint-react/core@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/core/-/core-1.52.5.tgz#307f521ff8328cec4218bdd92d7a20d920664aff"
+  integrity sha512-GR0FMWTsMEonel3RyJxNCZQMNFpN7gHRU6Fye5qGgwaC1OKdR8mOckcuQhqTzmZbVvy9Q0j7OmcYWVIMoIX1GA==
   dependencies:
-    "@eslint-react/ast" "1.52.4"
-    "@eslint-react/eff" "1.52.4"
-    "@eslint-react/kit" "1.52.4"
-    "@eslint-react/shared" "1.52.4"
-    "@eslint-react/var" "1.52.4"
+    "@eslint-react/ast" "1.52.5"
+    "@eslint-react/eff" "1.52.5"
+    "@eslint-react/kit" "1.52.5"
+    "@eslint-react/shared" "1.52.5"
+    "@eslint-react/var" "1.52.5"
     "@typescript-eslint/scope-manager" "^8.39.1"
     "@typescript-eslint/type-utils" "^8.39.1"
     "@typescript-eslint/types" "^8.39.1"
@@ -548,39 +548,39 @@
     birecord "^0.1.1"
     ts-pattern "^5.8.0"
 
-"@eslint-react/eff@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/eff/-/eff-1.52.4.tgz#08d88522cb03b4241c116d0634c2952ebbb788db"
-  integrity sha512-n2r2ncw8pTA7WuMI4aM9R4kPNiXaF8o0lH6X/pa/XP/hhVKO6u6R2uoLV8ltm53UZVVY+6qz92hRiLoTwefd3A==
+"@eslint-react/eff@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/eff/-/eff-1.52.5.tgz#1baa16a0b80a531d6ff7f83774a5a6bf96d49e6b"
+  integrity sha512-uuvRL4heWYrabDn06YRXaCJ06cLyfSxVokUKOVg7a99i2EJ4bemQUSQK+7F3CFK58B4h3UPDk2+pPg3dbc8cKQ==
 
-"@eslint-react/kit@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/kit/-/kit-1.52.4.tgz#45b8a4fbfb158ed6c9e6ce418147249cff6b9d33"
-  integrity sha512-w1o8Qh/3rWQBIFB/ENS9A/EeGhUkAheYWeA4uHLuLMZ4ULwXU2c6aw3QZ9MW12lJ5JNWKiu3MuszVHTQmYUM/Q==
+"@eslint-react/kit@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/kit/-/kit-1.52.5.tgz#a417c87bf920d2956f6437bb813f7e0dcbb58770"
+  integrity sha512-1DoO/wc2OUaNT5yTi6G07k2+NvNNGP+HK2nIYBz+ciaMOP6bqeWNVefrUXgWnr30YwfScYeEdo+tmRck37mu+w==
   dependencies:
-    "@eslint-react/eff" "1.52.4"
+    "@eslint-react/eff" "1.52.5"
     "@typescript-eslint/utils" "^8.39.1"
     ts-pattern "^5.8.0"
     zod "^4.0.17"
 
-"@eslint-react/shared@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/shared/-/shared-1.52.4.tgz#40405ce5600501f608ff266c678b6831dc45c34d"
-  integrity sha512-ckRfgtBpsEGQgS9x2N/u+TB67UeASzYclQdlbhn29Y3/G3lvYTrXEyo49jZKVkpBW8ewSQAlwqUeipOrfv27XA==
+"@eslint-react/shared@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/shared/-/shared-1.52.5.tgz#f178d12b6263afb32abcc1e4408192307388d757"
+  integrity sha512-DX/gBI5Qki2gmPNzpTb10B+tDtAxp404Oo9kSOM/iv+7vRbgza++OSnt8+w0/eoMezcjIpEtgtLMKcHxUirosQ==
   dependencies:
-    "@eslint-react/eff" "1.52.4"
-    "@eslint-react/kit" "1.52.4"
+    "@eslint-react/eff" "1.52.5"
+    "@eslint-react/kit" "1.52.5"
     "@typescript-eslint/utils" "^8.39.1"
     ts-pattern "^5.8.0"
     zod "^4.0.17"
 
-"@eslint-react/var@1.52.4":
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/@eslint-react/var/-/var-1.52.4.tgz#4ee22b434c9b242965f3eb039c9f29339f252845"
-  integrity sha512-tckDIawDTtpG3UVg/XEqxULq669B7Br2q84Hh3d3pTPojUamRZ+zbWY3gwyS+JS9iQ1lI9aOInQISdKzRuGWKQ==
+"@eslint-react/var@1.52.5":
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/@eslint-react/var/-/var-1.52.5.tgz#c6e657ae9955d31ac0a4a5942268d2e5946d07cc"
+  integrity sha512-KPhyC1TZVUFaQujOGDN2EOlG5W0w8Lu4WBEx0QZQR9SsVYDnYOWj1G7cLZeZb/VIr8ikhuqe/USusixcRjiWtw==
   dependencies:
-    "@eslint-react/ast" "1.52.4"
-    "@eslint-react/eff" "1.52.4"
+    "@eslint-react/ast" "1.52.5"
+    "@eslint-react/eff" "1.52.5"
     "@typescript-eslint/scope-manager" "^8.39.1"
     "@typescript-eslint/types" "^8.39.1"
     "@typescript-eslint/utils" "^8.39.1"
@@ -1247,9 +1247,9 @@
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
 "@modelcontextprotocol/sdk@^1.10.2":
-  version "1.17.2"
-  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.17.2.tgz#232d079c374bef18d0b411e5d8c7e6c5f24e8684"
-  integrity sha512-EFLRNXR/ixpXQWu6/3Cu30ndDFIFNaqUXcTqsGebujeMan9FzhAaFFswLRiFj61rgygDRr8WO1N+UijjgRxX9g==
+  version "1.17.3"
+  resolved "https://registry.yarnpkg.com/@modelcontextprotocol/sdk/-/sdk-1.17.3.tgz#cf92354220f0183d28179e96a9bf3a8f6d3211ae"
+  integrity sha512-JPwUKWSsbzx+DLFznf/QZ32Qa+ptfbUlHhRLrBQBAFu9iI1iYvizM4p+zhhRDceSsPutXp4z+R/HPVphlIiclg==
   dependencies:
     ajv "^6.12.6"
     content-type "^1.0.5"
@@ -2096,9 +2096,9 @@
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
 "@types/node@*", "@types/node@^24.2.1":
-  version "24.2.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.2.1.tgz#83e41543f0a518e006594bb394e2cd961de56727"
-  integrity sha512-DRh5K+ka5eJic8CjH7td8QpYEV6Zo10gfRkjHCO3weqZHWDtAaSTFtl4+VMqOJ4N5jcuhZ9/l+yy8rVgw7BQeQ==
+  version "24.3.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.3.0.tgz#89b09f45cb9a8ee69466f18ee5864e4c3eb84dec"
+  integrity sha512-aPTXCrfwnDLj4VvXrm+UUCQjNEvJgNA8s5F1cvwQU+3KNltTOkBm1j30uNLyqqPNe7gE3KFzImYoZEfLhp4Yow==
   dependencies:
     undici-types "~7.10.0"
 
@@ -3003,9 +3003,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.199:
-  version "1.5.200"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.200.tgz#adffa5db97390ce9d48987f528117a608ed0d7c9"
-  integrity sha512-rFCxROw7aOe4uPTfIAx+rXv9cEcGx+buAF4npnhtTqCJk5KDFRnh3+KYj7rdVh6lsFt5/aPs+Irj9rZ33WMA7w==
+  version "1.5.202"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.202.tgz#e243716943a2cab144604a81b9ebaa87b4e8c1d4"
+  integrity sha512-NxbYjRmiHcHXV1Ws3fWUW+SLb62isauajk45LUJ/HgIOkUA7jLZu/X2Iif+X9FBNK8QkF9Zb4Q2mcwXCcY30mg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3102,16 +3102,16 @@ escape-string-regexp@^4.0.0:
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
 eslint-plugin-react-dom@^1.52.4:
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-dom/-/eslint-plugin-react-dom-1.52.4.tgz#76b22bd181edb36dcc9a3c4604715f79487ab84e"
-  integrity sha512-UVt3T48F48Nbl40eqSzwkjpUnLnobj0St7EwpbItMhEOgcwjle8Jrxe2odetQBCuwPZ0dkeH0yE1PbAlNfQU/A==
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-dom/-/eslint-plugin-react-dom-1.52.5.tgz#a1e63adaf155441372a39c6bd1efcb0e8c00b2c5"
+  integrity sha512-lic3ZDglslJiLVZyUVDf00VHGPJ09ojthP+dF7G1Jko3s82SElNVcaETrSq4T/FYDqrH8UE27Uyb3nQTaPw6FA==
   dependencies:
-    "@eslint-react/ast" "1.52.4"
-    "@eslint-react/core" "1.52.4"
-    "@eslint-react/eff" "1.52.4"
-    "@eslint-react/kit" "1.52.4"
-    "@eslint-react/shared" "1.52.4"
-    "@eslint-react/var" "1.52.4"
+    "@eslint-react/ast" "1.52.5"
+    "@eslint-react/core" "1.52.5"
+    "@eslint-react/eff" "1.52.5"
+    "@eslint-react/kit" "1.52.5"
+    "@eslint-react/shared" "1.52.5"
+    "@eslint-react/var" "1.52.5"
     "@typescript-eslint/scope-manager" "^8.39.1"
     "@typescript-eslint/types" "^8.39.1"
     "@typescript-eslint/utils" "^8.39.1"
@@ -3130,16 +3130,16 @@ eslint-plugin-react-refresh@^0.4.20:
   integrity sha512-XpbHQ2q5gUF8BGOX4dHe+71qoirYMhApEPZ7sfhF/dNnOF1UXnCMGZf79SFTBO7Bz5YEIT4TMieSlJBWhP9WBA==
 
 eslint-plugin-react-x@^1.52.4:
-  version "1.52.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react-x/-/eslint-plugin-react-x-1.52.4.tgz#88796decf4b7f1ef917768df3f22fe2a567e9072"
-  integrity sha512-znbM7mbL7tgm2PQbSAZ83jX2JTxpbXJQZk2vpJH98iEZCwcVvC3joiI6szLyyykAqFgldmpghebxvBnVw+aZMQ==
+  version "1.52.5"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react-x/-/eslint-plugin-react-x-1.52.5.tgz#763a33686115822839fb1e70ff474f40a3d0226c"
+  integrity sha512-9+Lzvu363eJIKe87vX8Jz7hErFmNCofSS0IdPdLdQ9TmFhYL/Bju6/3ZToiqAVK48dA++fNzbh79passNM33Mg==
   dependencies:
-    "@eslint-react/ast" "1.52.4"
-    "@eslint-react/core" "1.52.4"
-    "@eslint-react/eff" "1.52.4"
-    "@eslint-react/kit" "1.52.4"
-    "@eslint-react/shared" "1.52.4"
-    "@eslint-react/var" "1.52.4"
+    "@eslint-react/ast" "1.52.5"
+    "@eslint-react/core" "1.52.5"
+    "@eslint-react/eff" "1.52.5"
+    "@eslint-react/kit" "1.52.5"
+    "@eslint-react/shared" "1.52.5"
+    "@eslint-react/var" "1.52.5"
     "@typescript-eslint/scope-manager" "^8.39.1"
     "@typescript-eslint/type-utils" "^8.39.1"
     "@typescript-eslint/types" "^8.39.1"
@@ -3380,9 +3380,9 @@ fbjs@^3.0.0:
     ua-parser-js "^1.0.35"
 
 fdir@^6.4.4, fdir@^6.4.6:
-  version "6.4.6"
-  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.6.tgz#2b268c0232697063111bbf3f64810a2a741ba281"
-  integrity sha512-hiFoqpyZcfNm1yc4u8oWCf9A2c4D3QjCrks3zmoVKVxpQRzmPNar1hUJcBG2RQHvEVGDN+Jm81ZheVLAQMK6+w==
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
+  integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
 
 fetch-blob@^3.1.2, fetch-blob@^3.1.4:
   version "3.2.0"
