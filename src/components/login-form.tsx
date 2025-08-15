@@ -14,6 +14,8 @@ import {useAuth} from "@/lib/auth.tsx";
 import {useLocation, useNavigate} from "react-router";
 import {GET_AUTH_TOKEN} from "@/components/auth.graphql.ts";
 import {useLazyQuery} from "@apollo/client";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
+import {AlertCircleIcon} from "lucide-react";
 
 type GetAuthTokenResult = { tokenAuth: { token: string } | null };
 type GetAuthTokenVars = { username: string; password: string; };
@@ -88,9 +90,11 @@ export function LoginForm({className, ...props}: React.ComponentProps<"div">) {
                             </div>
 
                             {error && (
-                                <p className="text-sm text-red-500" role="alert" aria-live="polite">
-                                    Authentication failed. Please check your credentials and try again.
-                                </p>
+                                <Alert variant="destructive">
+                                    <AlertCircleIcon/>
+                                    <AlertTitle>Authentication failed.</AlertTitle>
+                                    <AlertDescription>Please verify your credentials and try again.</AlertDescription>
+                                </Alert>
                             )}
 
                             <div className="flex flex-col gap-3">
