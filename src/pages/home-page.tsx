@@ -3,7 +3,7 @@ import {
     CardContent,
 } from "@/components/ui/card.tsx";
 
-function AboutPage() {
+function HomePage() {
     return (
         <div className="flex justify-center-safe p-4">
             <Card className="max-w-5xl">
@@ -20,4 +20,4 @@ function AboutPage() {
     );
 }
 
-export default AboutPage;
+export default HomePage;

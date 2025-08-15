@@ -1,17 +1,26 @@
+import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar.tsx";
+import {AppSidebar} from "@/components/app-sidebar.tsx";
+import {SiteHeader} from "@/components/site-header.tsx";
 import {Route, Routes} from "react-router";
-import EmulatorPage from "./pages/EmulatorPage";
-import Navbar from "@/components/navbar.tsx";
-import AboutPage from "@/pages/about-page.tsx";
+import HomePage from "@/pages/home-page.tsx";
+import EmulatorPage from "@/pages/EmulatorPage";
 
 function App() {
     return (
-        <>
-            <Navbar/>
-            <Routes>
-                <Route path="/about" element={<AboutPage/>}/>
-                <Route path="/emulator" element={<EmulatorPage/>}/>
-            </Routes>
-        </>
+        <div className="[--header-height:calc(--spacing(14))]">
+            <SidebarProvider className="flex flex-col">
+                <SiteHeader/>
+                <div className="flex flex-1">
+                    <AppSidebar/>
+                    <SidebarInset>
+                        <Routes>
+                            <Route path="/" element={<HomePage/>}/>
+                            <Route path="/emulator" element={<EmulatorPage/>}/>
+                        </Routes>
+                    </SidebarInset>
+                </div>
+            </SidebarProvider>
+        </div>
     );
 }
 
