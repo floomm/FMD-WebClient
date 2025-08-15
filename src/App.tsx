@@ -1,17 +1,18 @@
 import {Route, Routes} from "react-router";
 import EmulatorPage from "./pages/EmulatorPage";
-import {ThemeProvider} from "@/components/theme-provider.tsx";
-import {ModeToggle} from "@/components/mode-toggle.tsx";
+import Navbar from "@/components/navbar.tsx";
+import AboutPage from "@/pages/about-page.tsx";
 
 function App() {
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <>
+            <Navbar/>
             <Routes>
+                <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/emulator" element={<EmulatorPage/>}/>
             </Routes>
-            <ModeToggle />
-        </ThemeProvider>
-    )
+        </>
+    );
 }
 
 export default App
