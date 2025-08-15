@@ -85,7 +85,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                                 <div
                                     className="flex aspect-square size-8 items-center justify-center rounded-lg">
                                     <Avatar>
-                                        <AvatarImage src="../../public/Logo1.jpg" />
+                                        <AvatarImage src="/Logo1.jpg" />
                                         <AvatarFallback>FMD</AvatarFallback>
                                     </Avatar>
                                 </div>
