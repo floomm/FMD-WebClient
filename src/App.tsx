@@ -16,7 +16,7 @@ function App() {
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/emulator" element={<EmulatorPage/>}/>
                 <Route path="*" element={<Navigate to="/" replace/>}/>
-                {/*<Route path="*" element={<NotFoundPage/>}/>*/} // TOOD: Add 404 page?
+                {/*<Route path="*" element={<NotFoundPage/>}/>*/} {/*TOOD: Add 404 page?*/}
             </Route>
         </Routes>
     );
