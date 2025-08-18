@@ -1,12 +1,10 @@
-import {
-    Button, Col, Container, Row,
-} from "react-bootstrap";
 import React, {useState} from 'react';
 import EmulatorView from "../components/emulator/EmulatorView.jsx";
 import {GlobalStyles} from "../assets/emulator/theming/global.js";
 import {ThemeProvider} from "styled-components";
 import {useDarkMode} from "../hooks/emulator/theming/useDarkMode.js";
 import {darkTheme, lightTheme} from "../assets/emulator/theming/theme.js";
+import {Button} from "@/components/ui/button.js";
 
 function EmulatorPage() {
     const emulatorUrisFromStorage = JSON.parse(sessionStorage.getItem('emulatorUris')) || [];

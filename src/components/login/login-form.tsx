@@ -1,18 +1,18 @@
-import {cn} from "@/lib/utils"
-import {Button} from "@/components/ui/button"
+import {cn} from "@/lib/utils.ts"
+import {Button} from "@/components/ui/button.tsx"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
+} from "@/components/ui/card.tsx"
+import {Input} from "@/components/ui/input.tsx"
+import {Label} from "@/components/ui/label.tsx"
 import {type FormEvent, useEffect, useState} from "react";
 import {useAuth} from "@/lib/auth.tsx";
 import {useLocation, useNavigate} from "react-router";
-import {GET_AUTH_TOKEN} from "@/components/auth.graphql.ts";
+import {GET_AUTH_TOKEN} from "@/components/graphql/auth.graphql.ts";
 import {useLazyQuery} from "@apollo/client";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";

@@ -1,7 +1,7 @@
-import {Button, ButtonGroup, Col, Container, Form, InputGroup, Row, Spinner, ToggleButton} from "react-bootstrap";
-import {CiLocationOn} from "react-icons/ci";
 import React, {useEffect, useState} from "react";
 import {Emulator} from "android-emulator-webrtc/emulator";
+import {Button} from "@/components/ui/button.js";
+import {MapPin} from "lucide-react";
 
 function EmulatorView({   index,
                           emulatorConnectionState,
@@ -88,7 +88,7 @@ function EmulatorView({   index,
     }
 
 
-    return (<>
+    return (
             <Container>
                 <Row>
                     <Col className="border-box noUserSelect">
@@ -196,7 +196,7 @@ function EmulatorView({   index,
                                             }
                                         )}
                                         size="large">
-                                        <CiLocationOn/>
+                                        <MapPin/>
                                     </Button>
                                     <Form.Control
                                         aria-label="Longitude"
@@ -237,7 +237,6 @@ function EmulatorView({   index,
                     </Col>
                 </Row>
             </Container>
-        </>
     );
 }
 

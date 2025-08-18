@@ -9,11 +9,11 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import {Button} from "@/components/ui/button"
-import {Separator} from "@/components/ui/separator"
-import {useSidebar} from "@/components/ui/sidebar"
-import {ModeToggle} from "@/components/mode-toggle.tsx";
+} from "@/components/ui/breadcrumb.tsx"
+import {Button} from "@/components/ui/button.tsx"
+import {Separator} from "@/components/ui/separator.tsx"
+import {useSidebar} from "@/components/ui/sidebar.tsx"
+import {ModeToggle} from "@/components/theming/mode-toggle.tsx";
 
 export function SiteHeader() {
     const {toggleSidebar} = useSidebar()

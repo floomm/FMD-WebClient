@@ -8,17 +8,17 @@ import {
     Smartphone, Square,
 } from "lucide-react"
 
-import {NavAnalyses} from "@/components/nav-analyses.tsx"
-import {NavUser} from "@/components/nav-user"
+import {NavAnalyses} from "@/components/sidebar/nav-analyses.tsx"
+import {NavUser} from "@/components/sidebar/nav-user.tsx"
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
     SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
     SidebarRail,
-} from "@/components/ui/sidebar"
-import {NavOptions} from "@/components/nav-options.tsx";
-import {NavOperations} from "@/components/nav-operations.tsx";
+} from "@/components/ui/sidebar.tsx"
+import {NavOptions} from "@/components/sidebar/nav-options.tsx";
+import {NavOperations} from "@/components/sidebar/nav-operations.tsx";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 
 const data = {
@@ -81,7 +81,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="/">
+                            <a href="/public">
                                 <div
                                     className="flex aspect-square size-8 items-center justify-center rounded-lg">
                                     <Avatar>

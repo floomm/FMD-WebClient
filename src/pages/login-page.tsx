@@ -1,4 +1,4 @@
-import {LoginForm} from "@/components/login-form"
+import {LoginForm} from "@/components/login/login-form.tsx"
 import {useAuth} from "@/lib/auth.tsx";
 import {useNavigate} from "react-router";
 import {useEffect} from "react";

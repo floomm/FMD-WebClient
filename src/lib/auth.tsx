@@ -1,8 +1,8 @@
 import {createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {UserType} from "@/__generated__/graphql.ts";
 import {useApolloClient, useMutation, useQuery} from "@apollo/client";
-import {GET_CURRENT_USER} from "@/components/current-user.graphql.ts";
-import {DELETE_TOKEN_COOKIE} from "@/components/auth.graphql.ts";
+import {GET_CURRENT_USER} from "@/components/graphql/current-user.graphql.ts";
+import {DELETE_TOKEN_COOKIE} from "@/components/graphql/auth.graphql.ts";
 
 
 type AuthContextValue = {

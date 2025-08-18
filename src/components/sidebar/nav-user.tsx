@@ -8,19 +8,19 @@ import {
 import {
     Avatar,
     AvatarFallback,
-} from "@/components/ui/avatar"
+} from "@/components/ui/avatar.tsx"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu.tsx"
 import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar.tsx"
 import {useAuth} from "@/lib/auth.tsx";
 import {useNavigate} from "react-router";
 

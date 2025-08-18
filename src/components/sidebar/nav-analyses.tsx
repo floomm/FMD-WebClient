@@ -8,25 +8,25 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar.tsx"
 
-export function NavOperations({items,}: Readonly<{
-    items: {
-        title: string
+export function NavAnalyses({analyses,}: Readonly<{
+    analyses: {
+        name: string
         url: string
         icon: LucideIcon
     }[]
 }>) {
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Operations</SidebarGroupLabel>
+            <SidebarGroupLabel>Analysis</SidebarGroupLabel>
             <SidebarMenu>
-                {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                {analyses.map((item) => (
+                    <SidebarMenuItem key={item.name}>
                         <SidebarMenuButton asChild>
                             <a href={item.url}>
                                 <item.icon/>
-                                <span>{item.title}</span>
+                                <span>{item.name}</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
