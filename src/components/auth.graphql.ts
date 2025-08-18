@@ -1,4 +1,4 @@
-import {gql} from "../__generated__";
+import {gql} from "@/__generated__";
 
 export const GET_AUTH_TOKEN = gql(`
     query GetAuthToken($password: String!, $username: String!) {
