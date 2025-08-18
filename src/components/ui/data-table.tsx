@@ -16,13 +16,7 @@ import {
 } from "@/components/ui/table.tsx"
 import {useSidebar} from "@/components/ui/sidebar.tsx";
 import {useState} from "react";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious
-} from "@/components/ui/pagination.tsx";
+import {DataTablePagination} from "@/components/ui/data-table-pagination.tsx";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -96,29 +90,9 @@ export function DataTable<TData, TValue>({columns, mobileColumns, data,}: Readon
                     </TableBody>
                 </Table>
             </div>
-            {table.getPageCount() > 1 && (
-                <Pagination className="my-4">
-                    <PaginationContent>
-                        {table.getCanPreviousPage() && (
-                            <PaginationItem>
-                                <PaginationPrevious onClick={() => {
-                                    table.previousPage();
-                                }}/>
-                            </PaginationItem>
-                        )}
-                        <PaginationItem>
-                            {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
-                        </PaginationItem>
-                        {table.getCanNextPage() && (
-                            <PaginationItem>
-                                <PaginationNext onClick={() => {
-                                    table.nextPage();
-                                }}/>
-                            </PaginationItem>
-                        )}
-                    </PaginationContent>
-                </Pagination>
-            )}
+            <div className="my-4">
+                <DataTablePagination table={table} disableSelectedRows/>
+            </div>
         </div>
     )
 }

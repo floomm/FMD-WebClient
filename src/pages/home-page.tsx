@@ -5,7 +5,7 @@ import {
 
 function HomePage() {
     return (
-        <div className="flex justify-center-safe p-4">
+        <div className="flex justify-center p-4">
             <Card className="max-w-5xl">
                 <CardContent>
                     <p className="text-center">
