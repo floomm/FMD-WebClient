@@ -15,6 +15,14 @@ export const columns: ColumnDef<Firmware>[] = [
     {
         accessorKey: "indexedDate",
         header: "Indexed Date",
+        cell: ({row}) => {
+            const padStart = (value: number): string =>
+                value.toString().padStart(2, "0");
+
+            const date: Date = new Date(row.getValue("indexedDate"));
+            return `
+            ${date.getFullYear().toString()}-${padStart(date.getMonth() + 1)}-${padStart(date.getDate())} ${padStart(date.getHours())}:${padStart(date.getMinutes())}`;
+        }
     },
     {
         accessorKey: "osVendor",
