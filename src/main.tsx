@@ -4,7 +4,7 @@ import App from './App.tsx'
 import {ApolloProvider} from "@apollo/client";
 import {client} from "./lib/apolloClient.ts";
 import {BrowserRouter} from "react-router";
-import {ThemeProvider} from "./components/theming/theme-provider.tsx";
+import {ThemeProvider} from "@/components/ui/theming/theme-provider.tsx";
 import {AuthProvider} from "@/lib/auth.tsx";
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

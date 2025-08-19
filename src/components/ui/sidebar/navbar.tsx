@@ -1,5 +1,5 @@
-import {ModeToggle} from "@/components/theming/mode-toggle.tsx";
-import {Button} from "../ui/button.tsx";
+import {ModeToggle} from "@/components/ui/theming/mode-toggle.tsx";
+import {Button} from "../button.tsx";
 import {Link, NavLink} from "react-router";
 import {
     NavigationMenu,

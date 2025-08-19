@@ -8,8 +8,8 @@ import {
     Smartphone, Square,
 } from "lucide-react"
 
-import {NavAnalyses} from "@/components/sidebar/nav-analyses.tsx"
-import {NavUser} from "@/components/sidebar/nav-user.tsx"
+import {NavAnalyses} from "@/components/ui/sidebar/nav-analyses.tsx"
+import {NavUser} from "@/components/ui/sidebar/nav-user.tsx"
 import {
     Sidebar,
     SidebarContent,
@@ -17,8 +17,8 @@ import {
     SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar.tsx"
-import {NavOptions} from "@/components/sidebar/nav-options.tsx";
-import {NavOperations} from "@/components/sidebar/nav-operations.tsx";
+import {NavOptions} from "@/components/ui/sidebar/nav-options.tsx";
+import {NavOperations} from "@/components/ui/sidebar/nav-operations.tsx";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 
 const data = {

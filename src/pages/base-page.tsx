@@ -1,12 +1,12 @@
 import {ReactNode} from "react";
-import {TypographyH1} from "@/components/typography/headings.tsx";
+import {TypographyH1} from "@/components/ui/typography/headings.tsx";
 
-type props = {
+type Props = {
     children: ReactNode,
     title: string,
 }
 
-export function BasePage({children, title}: Readonly<props>) {
+export function BasePage({children, title}: Readonly<Props>) {
     return (
         <>
             <div className="m-4">

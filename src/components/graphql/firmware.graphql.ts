@@ -21,10 +21,11 @@ export const GET_FIRMWARE_OBJECT_ID_LIST = gql(`
 export const GET_FIRMWARES_BY_OBJECT_IDS = gql(`
     query GetFirmwaresByObjectIds($objectIds: [String!]!) {
         android_firmware_list(objectIdList: $objectIds) {
+            id
             indexedDate
             originalFilename
             osVendor
             versionDetected
         }
-    } 
+    }
 `);

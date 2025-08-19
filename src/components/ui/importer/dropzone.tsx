@@ -1,9 +1,6 @@
 import {useCallback, useMemo, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import {Card} from "@/components/ui/card.tsx";
-import {useMutation} from "@apollo/client";
-import {CREATE_FIRMWARE_EXTRACTOR_JOB} from "@/components/graphql/firmware.graphql.ts";
-import {Button} from "@/components/ui/button.tsx";
 
 type FileState =
     | { status: "queued"; file: File }
@@ -122,13 +119,11 @@ export function Dropzone() {
 
     const hasFileStates = useMemo(() => fileStates.length > 0, [fileStates]);
 
-    const [createFirmwareExtractorJob, {loading: extractorJobLoading}] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
-
     return (
         <>
-            <div {...getRootProps({className: "dropzone flex justify-center w-full max-w-2xl rounded-2xl"})}>
+            <div {...getRootProps({className: "dropzone flex justify-center w-full rounded-3xl"})}>
                 <Card
-                    className="flex items-center justify-center text-center w-full max-w-2xl min-h-64 p-4 border-2 border-dashed">
+                    className="flex items-center justify-center text-center w-full min-h-48 p-4 border-2 border-dashed">
                     <input {...getInputProps()} />
                     <p>(CURRENTLY DISABLED)</p>
                     <p>Drag 'n' drop some firmware files here, or click to select files</p>
@@ -136,7 +131,7 @@ export function Dropzone() {
             </div>
 
             {hasFileStates && (
-                <div className="w-full max-w-2xl">
+                <div className="w-full">
                     {fileStates.map((state, idx) => (
                         <Card key={idx} className="p-4 my-2">
                             <div className="flex justify-between items-center gap-4">
@@ -152,13 +147,6 @@ export function Dropzone() {
                     ))}
                 </div>
             )}
-
-            <Button
-                onClick={() => createFirmwareExtractorJob({variables: {storageIndex: 0}})}
-                disabled={extractorJobLoading}
-            >
-                Extract Firmware
-            </Button>
         </>
     );
 }

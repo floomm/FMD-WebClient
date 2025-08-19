@@ -33,14 +33,18 @@ export function DataTable<TData, TValue>({columns, mobileColumns, data,}: Readon
         pageSize: 5, //default page size
     });
 
+    const [rowSelection, setRowSelection] = useState({});
+
     const table = useReactTable({
         data,
         columns: columnsToRender,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onPaginationChange: setPagination,
+        onRowSelectionChange: setRowSelection,
         state: {
             pagination,
+            rowSelection,
         }
     });
 
