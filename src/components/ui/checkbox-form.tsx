@@ -35,7 +35,7 @@ const DefaultSchema = z.object({
     }),
 })
 
-export function CheckboxFormMultiple(
+export function CheckboxForm(
     {
         label,
         description,

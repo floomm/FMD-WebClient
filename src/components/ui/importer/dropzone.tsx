@@ -1,6 +1,8 @@
 import {useCallback, useMemo, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import {Card} from "@/components/ui/card.tsx";
+import {cn} from "@/lib/utils.ts";
+import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 
 type FileState =
     | { status: "queued"; file: File }
@@ -59,7 +61,11 @@ async function uploadInChunks(
     return {uploadId};
 }
 
-export function Dropzone() {
+export function Dropzone(
+    {
+        className = "",
+    }
+) {
     const [fileStates, setFileStates] = useState<FileState[]>([]);
 
     const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -120,12 +126,15 @@ export function Dropzone() {
     const hasFileStates = useMemo(() => fileStates.length > 0, [fileStates]);
 
     return (
-        <>
+        <div className={cn(className)}>
             <div {...getRootProps({className: "dropzone flex justify-center w-full rounded-3xl"})}>
                 <Card
-                    className="flex items-center justify-center text-center w-full min-h-48 p-4 border-2 border-dashed">
+                    className="flex items-center justify-center text-center w-full min-h-48 p-4 border-2 border-dashed"
+                >
                     <input {...getInputProps()} />
-                    <p>(CURRENTLY DISABLED)</p>
+                    <Alert variant="destructive" className="text-center border-none">
+                        <AlertTitle>(CURRENTLY DISABLED)</AlertTitle>
+                    </Alert>
                     <p>Drag 'n' drop some firmware files here, or click to select files</p>
                 </Card>
             </div>
@@ -147,6 +156,6 @@ export function Dropzone() {
                     ))}
                 </div>
             )}
-        </>
+        </div>
     );
 }

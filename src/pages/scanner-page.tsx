@@ -1,10 +1,28 @@
 import {BasePage} from "@/pages/base-page.tsx";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
 import {TypographyH4} from "@/components/ui/typography/headings.tsx";
-import {CheckboxFormMultiple} from "@/components/ui/checkbox-form.tsx";
+import {CheckboxForm} from "@/components/ui/checkbox-form.tsx";
 import {ColumnDef} from "@tanstack/react-table";
-import {Firmware, FirmwareDataTable} from "@/components/ui/firmware/firmware-data-table.tsx";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
+import {DataTableGraphQL} from "@/components/ui/table/data-table-graphql.tsx";
+import {useQuery} from "@apollo/client";
+import {
+    FIRMWARE_TABLE_ROW_SCANNER,
+    GET_FIRMWARE_OBJECT_ID_LIST,
+    GET_FIRMWARES_BY_OBJECT_IDS_SCANNER
+} from "@/components/graphql/firmware.graphql.ts";
+import {useMemo} from "react";
+import {
+    AppTableRowScannerFragment,
+    FirmwareTableRowScannerFragment
+} from "@/__generated__/graphql.ts";
+import {nonNullable} from "@/lib/non-nullable.ts";
+import {useFragment} from "@/__generated__";
+import {
+    APP_TABLE_ROW_SCANNER,
+    GET_APP_OBJECT_IDS_BY_FIRMWARE_OBJECT_IDS,
+    GET_APPS_BY_OBJECT_IDS_SCANNER
+} from "@/components/graphql/app.graphql.ts";
 
 export function ScannerPage() {
     return (
@@ -29,7 +47,7 @@ export function ScannerPage() {
 }
 
 function FirmwaresPanel() {
-    const columns: ColumnDef<Firmware>[] = [
+    const columns: ColumnDef<FirmwareTableRowScannerFragment>[] = [
         {
             id: "select",
             header: ({table}) => (
@@ -38,17 +56,25 @@ function FirmwaresPanel() {
                         table.getIsAllPageRowsSelected() ||
                         (table.getIsSomePageRowsSelected() && "indeterminate")
                     }
-                    onCheckedChange={(value) => { table.toggleAllPageRowsSelected(!!value); }}
+                    onCheckedChange={(value) => {
+                        table.toggleAllPageRowsSelected(!!value);
+                    }}
                     aria-label="Select all"
                 />
             ),
             cell: ({row}) => (
                 <Checkbox
                     checked={row.getIsSelected()}
-                    onCheckedChange={(value) => { row.toggleSelected(!!value); }}
+                    onCheckedChange={(value) => {
+                        row.toggleSelected(!!value);
+                    }}
                     aria-label="Select row"
                 />
             ),
+        },
+        {
+            id: "id",
+            header: "ID",
         },
         {
             accessorKey: "originalFilename",
@@ -56,18 +82,104 @@ function FirmwaresPanel() {
         },
     ];
 
+    const {
+        data: idsData,
+    } = useQuery(GET_FIRMWARE_OBJECT_ID_LIST);
+
+    const objectIds = useMemo(() =>
+            (idsData?.android_firmware_id_list ?? []).filter(Boolean) as string[],
+        [idsData]
+    );
+
+    const {
+        data: firmwaresData,
+    } = useQuery(GET_FIRMWARES_BY_OBJECT_IDS_SCANNER, {
+        variables: {objectIds},
+        skip: objectIds.length === 0,
+    });
+
+    const firmwares: FirmwareTableRowScannerFragment[] = useMemo(
+        () =>
+            ((firmwaresData?.android_firmware_list ?? [])
+                    .filter(nonNullable)
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    .map((item) => useFragment(FIRMWARE_TABLE_ROW_SCANNER, item))
+                    .filter(nonNullable)
+            ),
+        [firmwaresData]
+    );
+
     return (
         <div className="flex flex-col h-full p-6 gap-6">
             <TypographyH4>Firmwares</TypographyH4>
-            <FirmwareDataTable columns={columns}/>
+            <DataTableGraphQL columns={columns} data={firmwares}/>
         </div>
     );
 }
 
 function AppsPanel() {
+    const columns: ColumnDef<AppTableRowScannerFragment>[] = [
+        {
+            id: "select",
+            header: ({table}) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => {
+                        table.toggleAllPageRowsSelected(!!value);
+                    }}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({row}) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => {
+                        row.toggleSelected(!!value);
+                    }}
+                    aria-label="Select row"
+                />
+            ),
+        },
+        {
+            accessorKey: "id",
+            header: "ID",
+        }
+    ];
+
+    const {
+        data: idsData,
+    } = useQuery(GET_APP_OBJECT_IDS_BY_FIRMWARE_OBJECT_IDS);
+
+    const objectIds = useMemo(() =>
+            (idsData?.android_app_id_list ?? []).filter(Boolean) as string[],
+        [idsData]
+    );
+
+    const {
+        data: appsData,
+    } = useQuery(GET_APPS_BY_OBJECT_IDS_SCANNER, {
+        variables: {objectIds},
+        skip: objectIds.length === 0,
+    });
+
+    const apps: AppTableRowScannerFragment[] = useMemo(
+        () =>
+            ((appsData?.android_app_list ?? [])
+                    .filter(nonNullable)
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    .map((item) => useFragment(APP_TABLE_ROW_SCANNER, item))
+                    .filter(nonNullable)
+            ),
+        [appsData]
+    );
+
     return (
         <div className="flex flex-col h-full p-6 gap-6">
             <TypographyH4>Apps</TypographyH4>
+            <DataTableGraphQL columns={columns} data={apps}/>
         </div>
     );
 }
@@ -91,7 +203,7 @@ function ScannersPanel() {
     return (
         <div className="flex flex-col h-full p-6 gap-6">
             <TypographyH4>Scanners</TypographyH4>
-            <CheckboxFormMultiple
+            <CheckboxForm
                 items={scanners.map((scanner) => ({
                     id: scanner,
                     label: scanner,
