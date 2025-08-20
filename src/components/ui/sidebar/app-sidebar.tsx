@@ -20,13 +20,10 @@ import {
 import {NavOptions} from "@/components/ui/sidebar/nav-options.tsx";
 import {NavOperations} from "@/components/ui/sidebar/nav-operations.tsx";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
+import {useQuery} from "@apollo/client";
+import {GET_CURRENT_USER_EMAIL_AND_USERNAME} from "@/components/graphql/current-user.graphql.ts";
 
 const data = {
-    user: {
-        name: "fmd-admin",
-        email: "fmd-admin@fmd.localhost",
-        avatar: "",
-    },
     operations: [
         {
             title: "Importer",
@@ -71,6 +68,10 @@ const data = {
 }
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+    const {data: userData} = useQuery(GET_CURRENT_USER_EMAIL_AND_USERNAME);
+    const email = userData?.me?.email ?? "";
+    const username = userData?.me?.username ?? "";
+
     return (
         <Sidebar
             className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
@@ -103,7 +104,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 <NavOptions items={data.options} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={data.user}/>
+                <NavUser user={{email: email, name: username, avatar: ""}}/>
             </SidebarFooter>
             <SidebarRail/>
         </Sidebar>

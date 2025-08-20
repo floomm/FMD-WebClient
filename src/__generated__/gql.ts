@@ -21,7 +21,8 @@ type Documents = {
     "\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.CreateApkScanJobDocument,
     "\n    query GetAuthToken($password: String!, $username: String!) {\n        tokenAuth(password: $password, username: $username) {\n            token\n        }\n    }\n": typeof types.GetAuthTokenDocument,
     "\n    mutation DeleteTokenCookie {\n        deleteTokenCookie {\n            deleted\n        }\n    }\n": typeof types.DeleteTokenCookieDocument,
-    "\n    query GetCurrentUser {\n        me {\n            email\n            firstName\n            isActive\n            isStaff\n            isSuperuser\n            lastLogin\n            lastName\n            username\n            dateJoined\n            id\n        }\n    }\n": typeof types.GetCurrentUserDocument,
+    "\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n": typeof types.GetCurrentUserIdDocument,
+    "\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n": typeof types.GetCurrentUserEmailAndUsernameDocument,
     "\n    mutation CreateFirmwareExtractorJob($storageIndex: Int!) {\n        createFirmwareExtractorJob(\n            createFuzzyHashes: false\n            queueName: \"high-python\"\n            storageIndex: $storageIndex\n        ) {\n            jobId\n        }\n    }\n": typeof types.CreateFirmwareExtractorJobDocument,
     "\n    query GetFirmwareObjectIdList {\n        android_firmware_id_list\n    }\n": typeof types.GetFirmwareObjectIdListDocument,
     "\n    fragment FirmwareTableRow on AndroidFirmwareType {\n        id\n        absoluteStorePath\n        aecsBuildFilePath\n#        fileSizeBytes\n        filename\n        hasFileIndex\n        hasFuzzyHashIndex\n        indexedDate\n        md5\n        originalFilename\n        osVendor\n#        partitionInfoDict\n        relativeStorePath\n        sha1\n        sha256\n        tag\n        versionDetected\n        pk\n    }\n": typeof types.FirmwareTableRowFragmentDoc,
@@ -40,7 +41,8 @@ const documents: Documents = {
     "\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n": types.CreateApkScanJobDocument,
     "\n    query GetAuthToken($password: String!, $username: String!) {\n        tokenAuth(password: $password, username: $username) {\n            token\n        }\n    }\n": types.GetAuthTokenDocument,
     "\n    mutation DeleteTokenCookie {\n        deleteTokenCookie {\n            deleted\n        }\n    }\n": types.DeleteTokenCookieDocument,
-    "\n    query GetCurrentUser {\n        me {\n            email\n            firstName\n            isActive\n            isStaff\n            isSuperuser\n            lastLogin\n            lastName\n            username\n            dateJoined\n            id\n        }\n    }\n": types.GetCurrentUserDocument,
+    "\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n": types.GetCurrentUserIdDocument,
+    "\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n": types.GetCurrentUserEmailAndUsernameDocument,
     "\n    mutation CreateFirmwareExtractorJob($storageIndex: Int!) {\n        createFirmwareExtractorJob(\n            createFuzzyHashes: false\n            queueName: \"high-python\"\n            storageIndex: $storageIndex\n        ) {\n            jobId\n        }\n    }\n": types.CreateFirmwareExtractorJobDocument,
     "\n    query GetFirmwareObjectIdList {\n        android_firmware_id_list\n    }\n": types.GetFirmwareObjectIdListDocument,
     "\n    fragment FirmwareTableRow on AndroidFirmwareType {\n        id\n        absoluteStorePath\n        aecsBuildFilePath\n#        fileSizeBytes\n        filename\n        hasFileIndex\n        hasFuzzyHashIndex\n        indexedDate\n        md5\n        originalFilename\n        osVendor\n#        partitionInfoDict\n        relativeStorePath\n        sha1\n        sha256\n        tag\n        versionDetected\n        pk\n    }\n": types.FirmwareTableRowFragmentDoc,
@@ -97,7 +99,11 @@ export function gql(source: "\n    mutation DeleteTokenCookie {\n        deleteT
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query GetCurrentUser {\n        me {\n            email\n            firstName\n            isActive\n            isStaff\n            isSuperuser\n            lastLogin\n            lastName\n            username\n            dateJoined\n            id\n        }\n    }\n"): (typeof documents)["\n    query GetCurrentUser {\n        me {\n            email\n            firstName\n            isActive\n            isStaff\n            isSuperuser\n            lastLogin\n            lastName\n            username\n            dateJoined\n            id\n        }\n    }\n"];
+export function gql(source: "\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n"): (typeof documents)["\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n"): (typeof documents)["\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

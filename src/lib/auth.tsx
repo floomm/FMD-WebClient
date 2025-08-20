@@ -1,12 +1,11 @@
 import {createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {UserType} from "@/__generated__/graphql.ts";
 import {useApolloClient, useMutation, useQuery} from "@apollo/client";
-import {GET_CURRENT_USER} from "@/components/graphql/current-user.graphql.ts";
+import {GET_CURRENT_USER_ID} from "@/components/graphql/current-user.graphql.ts";
 import {DELETE_TOKEN_COOKIE} from "@/components/graphql/auth.graphql.ts";
 
 
 type AuthContextValue = {
-    currentUser: UserType | null;
+    currentUser: {__typename?: "UserType", id: string} | null | undefined;
     isAuthenticated: boolean;
     initializing: boolean;
     refreshMe: () => Promise<boolean>;
@@ -17,7 +16,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
-    const {data, loading, refetch} = useQuery(GET_CURRENT_USER, {
+    const {data, loading, refetch} = useQuery(GET_CURRENT_USER_ID, {
         fetchPolicy: "network-only",
         errorPolicy: "ignore",
     });
@@ -31,7 +30,7 @@ export function AuthProvider({children}: Readonly<{ children: ReactNode }>) {
         if (!loading) setBootstrapped(true);
     }, [loading]);
 
-    const currentUser: UserType | null = data?.me ?? null;
+    const currentUser = data?.me ?? null;
     const isAuthenticated = !!currentUser;
     const initializing = !bootstrapped;
 
