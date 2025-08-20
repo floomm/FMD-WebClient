@@ -12,7 +12,7 @@ import {
 } from "@/components/graphql/firmware.graphql.ts";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon, LoaderCircle, Trash} from "lucide-react";
-import {convertIdToObjectId} from "@/lib/graphql-utils.ts";
+import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {DataTable} from "@/components/ui/table/data-table.tsx";
 import {FirmwareTableRowImporterFragment} from "@/__generated__/graphql.ts";
 import {useMemo} from "react";

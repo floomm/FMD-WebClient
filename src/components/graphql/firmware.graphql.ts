@@ -1,5 +1,9 @@
 import {gql} from "@/__generated__";
 
+// ----------------------------------------------------------------------------------------------------
+// FIRMWARE EXTRACTION
+// ----------------------------------------------------------------------------------------------------
+
 export const CREATE_FIRMWARE_EXTRACTOR_JOB = gql(`
     mutation CreateFirmwareExtractorJob($storageIndex: Int!) {
         createFirmwareExtractorJob(
@@ -11,6 +15,10 @@ export const CREATE_FIRMWARE_EXTRACTOR_JOB = gql(`
         }
     }
 `);
+
+// ----------------------------------------------------------------------------------------------------
+// GET FIRMWARES (ALL FIELDS)
+// ----------------------------------------------------------------------------------------------------
 
 export const GET_FIRMWARE_OBJECT_ID_LIST = gql(`
     query GetFirmwareObjectIdList {
@@ -49,6 +57,10 @@ export const GET_FIRMWARES_BY_OBJECT_IDS = gql(`
     }
 `);
 
+// ----------------------------------------------------------------------------------------------------
+// GET FIRMWARES FOR IMPORTER PAGE
+// ----------------------------------------------------------------------------------------------------
+
 export const FIRMWARE_TABLE_ROW_IMPORTER = gql(`
     fragment FirmwareTableRowImporter on AndroidFirmwareType {
         id
@@ -67,6 +79,10 @@ export const GET_FIRMWARES_BY_OBJECT_IDS_IMPORTER = gql(`
     }
 `);
 
+// ----------------------------------------------------------------------------------------------------
+// GET FIRMWARES FOR SCANNER PAGE
+// ----------------------------------------------------------------------------------------------------
+
 export const FIRMWARE_TABLE_ROW_SCANNER = gql(`
     fragment FirmwareTableRowScanner on AndroidFirmwareType {
         id
@@ -81,6 +97,10 @@ export const GET_FIRMWARES_BY_OBJECT_IDS_SCANNER = gql(`
         }
     }
 `);
+
+// ----------------------------------------------------------------------------------------------------
+// DELETE FIRMWARES
+// ----------------------------------------------------------------------------------------------------
 
 export const DELETE_FIRMWARE_BY_OBJECT_ID = gql(`
     mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {
