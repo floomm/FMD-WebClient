@@ -13,7 +13,7 @@ import {
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon, LoaderCircle, Trash} from "lucide-react";
 import {convertIdToObjectId} from "@/lib/graphql-utils.ts";
-import {DataTableGraphQL} from "@/components/ui/table/data-table-graphql.tsx";
+import {DataTable} from "@/components/ui/table/data-table.tsx";
 import {FirmwareTableRowImporterFragment} from "@/__generated__/graphql.ts";
 import {useMemo} from "react";
 import {nonNullable} from "@/lib/non-nullable.ts";
@@ -66,7 +66,7 @@ export function ImporterPage() {
                 </Alert>
                 <Separator></Separator>
                 <TypographyH2>Extracted Firmwares</TypographyH2>
-                <DataTableGraphQL columns={columns} data={firmwares}/>
+                <DataTable columns={columns} data={firmwares}/>
             </div>
         </BasePage>
     );

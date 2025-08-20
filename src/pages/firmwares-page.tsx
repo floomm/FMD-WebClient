@@ -1,6 +1,6 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {BasePage} from "@/pages/base-page.tsx";
-import {DataTableGraphQL} from "@/components/ui/table/data-table-graphql.tsx";
+import {DataTable} from "@/components/ui/table/data-table.tsx";
 import {FirmwareTableRowFragment} from "@/__generated__/graphql.ts";
 import {useQuery} from "@apollo/client";
 import {
@@ -52,7 +52,7 @@ export function FirmwaresPage() {
 
     return (
         <BasePage title="Firmwares">
-            <DataTableGraphQL columns={columns} data={firmwares}/>
+            <DataTable columns={columns} data={firmwares}/>
         </BasePage>
     );
 }

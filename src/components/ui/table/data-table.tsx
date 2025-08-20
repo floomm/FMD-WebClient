@@ -30,7 +30,7 @@ interface DataTableProps<TData, TValue> {
     data: TData[];
 }
 
-export function DataTableGraphQL<TData, TValue>(
+export function DataTable<TData, TValue>(
     {
         columns,
         data,

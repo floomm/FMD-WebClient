@@ -4,7 +4,7 @@ import {TypographyH4} from "@/components/ui/typography/headings.tsx";
 import {CheckboxForm} from "@/components/ui/checkbox-form.tsx";
 import {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
-import {DataTableGraphQL} from "@/components/ui/table/data-table-graphql.tsx";
+import {DataTable} from "@/components/ui/table/data-table.tsx";
 import {useQuery} from "@apollo/client";
 import {
     FIRMWARE_TABLE_ROW_SCANNER,
@@ -112,7 +112,7 @@ function FirmwaresPanel() {
     return (
         <div className="flex flex-col h-full p-6 gap-6">
             <TypographyH4>Firmwares</TypographyH4>
-            <DataTableGraphQL columns={columns} data={firmwares}/>
+            <DataTable columns={columns} data={firmwares}/>
         </div>
     );
 }
@@ -179,7 +179,7 @@ function AppsPanel() {
     return (
         <div className="flex flex-col h-full p-6 gap-6">
             <TypographyH4>Apps</TypographyH4>
-            <DataTableGraphQL columns={columns} data={apps}/>
+            <DataTable columns={columns} data={apps}/>
         </div>
     );
 }
