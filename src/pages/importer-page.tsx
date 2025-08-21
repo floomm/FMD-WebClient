@@ -2,7 +2,6 @@ import {TypographyH2} from "@/components/ui/typography/headings.tsx";
 import {BasePage} from "@/pages/base-page.tsx";
 import {Dropzone} from "@/components/ui/importer/dropzone.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
-import {ColumnDef} from "@tanstack/react-table";
 import {Button} from "@/components/ui/button.tsx";
 import {useMutation, useQuery} from "@apollo/client";
 import {
@@ -14,12 +13,14 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon, LoaderCircle, Trash} from "lucide-react";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {DataTable} from "@/components/ui/table/data-table.tsx";
-import {FirmwareTableRowImporterFragment} from "@/__generated__/graphql.ts";
 import {useMemo} from "react";
 import {nonNullable} from "@/lib/non-nullable.ts";
 import {useFragment} from "@/__generated__";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
+
+import type {ColumnDef} from "@tanstack/react-table";
+import type {FirmwareTableRowImporterFragment} from "@/__generated__/graphql.ts";
 
 export function ImporterPage() {
     const [createFirmwareExtractorJob, {loading: extractorJobLoading}] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
@@ -108,6 +109,7 @@ const columns: ColumnDef<FirmwareTableRowImporterFragment>[] = [
     {
         id: "delete",
         cell: ({row}) => {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             const [deleteFirmware, {loading, error}] = useMutation(
                 DELETE_FIRMWARE_BY_OBJECT_ID, {
                     variables: {
