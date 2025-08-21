@@ -10,7 +10,7 @@ import {
     FIRMWARE_TABLE_ROW_IMPORTER, GET_FIRMWARE_OBJECT_ID_LIST,
     GET_FIRMWARES_BY_OBJECT_IDS_IMPORTER,
 } from "@/components/graphql/firmware.graphql.ts";
-import {Alert} from "@/components/ui/alert.tsx";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon, LoaderCircle, Trash} from "lucide-react";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {DataTable} from "@/components/ui/table/data-table.tsx";
@@ -19,12 +19,15 @@ import {useMemo} from "react";
 import {nonNullable} from "@/lib/non-nullable.ts";
 import {useFragment} from "@/__generated__";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
+import {Skeleton} from "@/components/ui/skeleton.tsx";
 
 export function ImporterPage() {
     const [createFirmwareExtractorJob, {loading: extractorJobLoading}] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
 
     const {
         data: idsData,
+        loading: idsLoading,
+        error: idsError,
     } = useQuery(GET_FIRMWARE_OBJECT_ID_LIST);
 
     const objectIds = useMemo(() =>
@@ -34,6 +37,8 @@ export function ImporterPage() {
 
     const {
         data: firmwaresData,
+        loading: firmwaresLoading,
+        error: firmwaresError,
     } = useQuery(GET_FIRMWARES_BY_OBJECT_IDS_IMPORTER, {
         variables: {objectIds},
         skip: objectIds.length === 0,
@@ -65,13 +70,36 @@ export function ImporterPage() {
             </Button>
             <Separator></Separator>
             <TypographyH2>Extracted Firmwares</TypographyH2>
-            <ScrollArea className="max-w-max w-full whitespace-nowrap">
-                <DataTable
-                    columns={columns}
-                    data={firmwares}
-                />
-                <ScrollBar orientation="horizontal"/>
-            </ScrollArea>
+
+            {(idsLoading || firmwaresLoading) && (
+                <Skeleton className="w-full h-[400px]"/>
+            )}
+
+            {idsError && (
+                <Alert className="max-w-max" variant="destructive">
+                    <AlertCircleIcon/>
+                    <AlertTitle>Unable to load firmware IDs.</AlertTitle>
+                    <AlertDescription>Error message: "{idsError.message}"</AlertDescription>
+                </Alert>
+            )}
+
+            {firmwaresError && (
+                <Alert className="max-w-max" variant="destructive">
+                    <AlertCircleIcon/>
+                    <AlertTitle>Unable to load firmwares.</AlertTitle>
+                    <AlertDescription>Error message: "{firmwaresError.message}"</AlertDescription>
+                </Alert>
+            )}
+
+            {!idsLoading && !firmwaresLoading && !idsError && !firmwaresError && (
+                <ScrollArea className="max-w-max w-full whitespace-nowrap">
+                    <DataTable
+                        columns={columns}
+                        data={firmwares}
+                    />
+                    <ScrollBar orientation="horizontal"/>
+                </ScrollArea>
+            )}
         </BasePage>
     );
 }
