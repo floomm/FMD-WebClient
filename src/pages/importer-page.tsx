@@ -10,7 +10,7 @@ import {
     FIRMWARE_TABLE_ROW_IMPORTER, GET_FIRMWARE_OBJECT_ID_LIST,
     GET_FIRMWARES_BY_OBJECT_IDS_IMPORTER,
 } from "@/components/graphql/firmware.graphql.ts";
-import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
+import {Alert} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon, LoaderCircle, Trash} from "lucide-react";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {DataTable} from "@/components/ui/table/data-table.tsx";
@@ -18,6 +18,7 @@ import {FirmwareTableRowImporterFragment} from "@/__generated__/graphql.ts";
 import {useMemo} from "react";
 import {nonNullable} from "@/lib/non-nullable.ts";
 import {useFragment} from "@/__generated__";
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 
 export function ImporterPage() {
     const [createFirmwareExtractorJob, {loading: extractorJobLoading}] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
@@ -51,23 +52,26 @@ export function ImporterPage() {
 
     return (
         <BasePage title="Firmware Import">
-            <div className="flex flex-col items-center mx-4 my-8 gap-8">
-                <TypographyH2>Upload Firmwares</TypographyH2>
-                <Dropzone className="w-full max-w-7xl"/>
-                <Separator></Separator>
-                <Button
-                    onClick={() => createFirmwareExtractorJob({variables: {storageIndex: 0}})}
-                    disabled={extractorJobLoading}
-                >
-                    Extract Firmwares
-                </Button>
-                <Alert className="max-w-xl text-center border-none" variant="destructive">
-                    <AlertTitle>TODO: Automatically extract uploaded firmwares. Remove button.</AlertTitle>
-                </Alert>
-                <Separator></Separator>
-                <TypographyH2>Extracted Firmwares</TypographyH2>
-                <DataTable columns={columns} data={firmwares}/>
-            </div>
+            <TypographyH2>Upload Firmwares</TypographyH2>
+            <Dropzone
+                className="max-w-5xl w-full"
+                message="Drag 'n' drop some firmware files here, or click to select files"
+            />
+            <Button
+                onClick={() => void createFirmwareExtractorJob({variables: {storageIndex: 0}})}
+                disabled={extractorJobLoading}
+            >
+                Extract Firmwares
+            </Button>
+            <Separator></Separator>
+            <TypographyH2>Extracted Firmwares</TypographyH2>
+            <ScrollArea className="max-w-max w-full whitespace-nowrap">
+                <DataTable
+                    columns={columns}
+                    data={firmwares}
+                />
+                <ScrollBar orientation="horizontal"/>
+            </ScrollArea>
         </BasePage>
     );
 }

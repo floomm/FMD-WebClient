@@ -24,20 +24,25 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.tsx";
 import {DataTablePagination} from "@/components/ui/table/data-table-pagination.tsx";
+import {cn} from "@/lib/utils.ts";
+import {ChevronRightIcon} from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
+    className?: string;
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
 }
 
 export function DataTable<TData, TValue>(
     {
+        className,
         columns,
         data,
     }: Readonly<DataTableProps<TData, TValue>>) {
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
+    const [isColumnMenuOpen, setIsColumnMenuOpen] = useState(false);
 
     const table = useReactTable({
         data,
@@ -56,12 +61,15 @@ export function DataTable<TData, TValue>(
     });
 
     return (
-        <div>
-            <div className="flex items-center py-4">
-                <DropdownMenu>
+        <div className={cn(className)}>
+            <div className="flex items-center p-4">
+                <DropdownMenu open={isColumnMenuOpen} onOpenChange={setIsColumnMenuOpen}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
                             Columns
+                            <ChevronRightIcon
+                                className={`transition-transform ${isColumnMenuOpen ? "rotate-90" : "rotate-0"}`}
+                            />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -87,7 +95,7 @@ export function DataTable<TData, TValue>(
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="overflow-hidden rounded-md border">
+            <div className="overflow-hidden rounded-xs border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -132,7 +140,7 @@ export function DataTable<TData, TValue>(
                 </Table>
             </div>
             <div className="flex items-center justify-between space-x-2 py-4">
-                <div className="text-muted-foreground flex-1 text-sm">
+                <div className="text-muted-foreground flex-1 text-sm px-2">
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>

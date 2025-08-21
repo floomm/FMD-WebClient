@@ -64,6 +64,7 @@ async function uploadInChunks(
 export function Dropzone(
     {
         className = "",
+        message = "Drag 'n' drop some files here, or click to select files",
     }
 ) {
     const [fileStates, setFileStates] = useState<FileState[]>([]);
@@ -127,15 +128,15 @@ export function Dropzone(
 
     return (
         <div className={cn(className)}>
-            <div {...getRootProps({className: "dropzone flex justify-center w-full rounded-3xl"})}>
+            <div {...getRootProps({className: "dropzone rounded-xl cursor-pointer"})}>
                 <Card
-                    className="flex items-center justify-center text-center w-full min-h-48 p-4 border-2 border-dashed"
+                    className="flex justify-center text-center min-h-48 p-4 border-2 border-dashed"
                 >
                     <input {...getInputProps()} />
                     <Alert variant="destructive" className="text-center border-none">
                         <AlertTitle>(CURRENTLY DISABLED)</AlertTitle>
                     </Alert>
-                    <p>Drag 'n' drop some firmware files here, or click to select files</p>
+                    <p>{message}</p>
                 </Card>
             </div>
 

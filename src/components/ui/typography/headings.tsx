@@ -1,36 +1,38 @@
 import {ReactNode} from "react";
+import {cn} from "@/lib/utils.ts";
 
 type props = {
     children: ReactNode,
+    className?: string,
 }
 
-function TypographyH1({children}: Readonly<props>) {
+function TypographyH1({children, className}: Readonly<props>) {
     return (
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
+        <h1 className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight text-balance", className)}>
             {children}
         </h1>
     )
 }
 
-function TypographyH2({children}: Readonly<props>) {
+function TypographyH2({children, className}: Readonly<props>) {
     return (
-        <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+        <h2 className={cn("scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0", className)}>
             {children}
         </h2>
     )
 }
 
-function TypographyH3({children}: Readonly<props>) {
+function TypographyH3({children, className}: Readonly<props>) {
     return (
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+        <h3 className={cn("scroll-m-20 text-2xl font-semibold tracking-tight", className)}>
             {children}
         </h3>
     )
 }
 
-function TypographyH4({children}: Readonly<props>) {
+function TypographyH4({children, className}: Readonly<props>) {
     return (
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+        <h4 className={cn("scroll-m-20 text-xl font-semibold tracking-tight", className)}>
             {children}
         </h4>
     )
