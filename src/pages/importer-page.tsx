@@ -57,7 +57,7 @@ export function ImporterPage() {
             <TypographyH2>Upload Firmwares</TypographyH2>
             <Dropzone
                 className="max-w-5xl w-full"
-                message="Drag 'n' drop some firmware files here, or click to select files"
+                message="Drag 'n' drop firmware files here, or click to select files"
             />
             <Button
                 onClick={() => void createFirmwareExtractorJob({variables: {storageIndex: 0}})}
