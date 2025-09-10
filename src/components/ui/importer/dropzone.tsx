@@ -9,10 +9,32 @@ export function Dropzone(
         message = "Drag 'n' drop files here, or click to select files",
     }
 ) {
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
+        if (acceptedFiles.length === 0) return;
 
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-        for (const file of acceptedFiles) {
-            console.log(file.name);
+        const file = acceptedFiles[0];
+        console.log("Uploading file:", file.name);
+
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("type", "firmware");
+        formData.append("storage_index", "0");
+
+        try {
+            const response = await fetch("/upload/file", {
+                method: "POST",
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error("Upload failed:", result);
+            } else {
+                console.log("Upload complete:", result);
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
         }
     }, []);
 
@@ -25,7 +47,7 @@ export function Dropzone(
             'application/zip': ['.zip'],
             'application/x-zip-compressed': ['.zip'],
         },
-        multiple: true,
+        multiple: false,
         onDrop,
     });
 

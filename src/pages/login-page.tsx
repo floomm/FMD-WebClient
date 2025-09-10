@@ -1,6 +1,6 @@
 import {useAuth} from "@/lib/auth.tsx";
 import {useLocation, useNavigate} from "react-router";
-import {FormEvent, useEffect, useState} from "react";
+import React, {FormEvent, useEffect, useState} from "react";
 import {useLazyQuery} from "@apollo/client";
 import {GET_AUTH_TOKEN} from "@/components/graphql/auth.graphql.ts";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card.tsx";
