@@ -17,7 +17,7 @@ export const CREATE_FIRMWARE_EXTRACTOR_JOB = gql(`
 `);
 
 // ----------------------------------------------------------------------------------------------------
-// GET FIRMWARES (ALL FIELDS)
+// GET FIRMWARE OBJECT ID LIST
 // ----------------------------------------------------------------------------------------------------
 
 export const GET_FIRMWARE_OBJECT_ID_LIST = gql(`
@@ -25,6 +25,10 @@ export const GET_FIRMWARE_OBJECT_ID_LIST = gql(`
         android_firmware_id_list
     }
 `);
+
+// ----------------------------------------------------------------------------------------------------
+// GET FIRMWARES (ALL FIELDS)
+// ----------------------------------------------------------------------------------------------------
 
 export const FIRMWARE_TABLE_ROW = gql(`
     fragment FirmwareTableRow on AndroidFirmwareType {
@@ -48,6 +52,32 @@ export const FIRMWARE_TABLE_ROW = gql(`
         pk
     }
 `);
+
+export const FIRMWARE_TABLE_ROW_PAGED = gql(`
+    fragment FirmwareTableRowPaged on AndroidFirmwareConnection {
+        edges {
+            cursor
+            node {
+                ...FirmwareTableRow
+            }
+        }
+        pageInfo {
+            endCursor
+            hasNextPage
+            hasPreviousPage
+            startCursor
+        }
+    }
+`);
+
+export const GET_FIRMWARES_PAGED = gql(`
+    query GetFirmwaresPaged($after: String, $before: String, $first: Int, $last: Int) {
+        android_firmware_connection(after: $after, before: $before, first: $first, last: $last) {
+            ...FirmwareTableRowPaged
+        }
+    }
+`);
+
 
 export const GET_FIRMWARES_BY_OBJECT_IDS = gql(`
     query GetFirmwaresByObjectIds($objectIds: [String!]!) {
