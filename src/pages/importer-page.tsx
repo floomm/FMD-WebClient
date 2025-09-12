@@ -58,6 +58,7 @@ export function ImporterPage() {
             <Dropzone
                 className="max-w-5xl w-full"
                 message="Drag 'n' drop firmware files here, or click to select files"
+                fileType="firmware"
             />
             <Button
                 onClick={() => void createFirmwareExtractorJob({variables: {storageIndex: 0}})}

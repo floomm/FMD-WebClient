@@ -6,7 +6,17 @@ import {useAuth} from "@/lib/auth.tsx";
 import {Progress} from "@/components/ui/progress.tsx";
 import {CircleCheckBigIcon, LoaderCircleIcon, XIcon} from "lucide-react";
 
+const makeUploadId = (file: File) => `${file.name}:${file.size.toString()}:${file.lastModified.toString()}`;
+
+type DropzoneProps = {
+    className?: string;
+    message?: string;
+    fileType: "firmware" | "apk";
+    storageIndex?: number;
+}
+
 type FileUpload = {
+    id: string;
     file: File;
     percentComplete: number;
     serverResponded: boolean;
@@ -17,10 +27,20 @@ export function Dropzone(
     {
         className = "",
         message = "Drag 'n' drop files here, or click to select files",
-    }
+        fileType,
+        storageIndex = 0,
+    }: Readonly<DropzoneProps>
 ) {
     const {getToken} = useAuth();
     const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
+
+    const updateUpload = useCallback((id: string, patch: Partial<FileUpload>) => {
+        setFileUploads(prev => prev.map(upload => (upload.id === id ? {...upload, ...patch} : upload)));
+    }, []);
+
+    const removeUpload = useCallback((id: string) => {
+        setFileUploads(prev => prev.filter(upload => upload.id !== id));
+    }, []);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
@@ -31,13 +51,20 @@ export function Dropzone(
             return;
         }
 
-        setFileUploads(acceptedFiles.map(file => ({file, percentComplete: 0, serverResponded: false})));
+        setFileUploads(acceptedFiles.map(file => ({
+            id: makeUploadId(file),
+            file,
+            percentComplete: 0,
+            serverResponded: false,
+        })));
 
         acceptedFiles.forEach((file) => {
+            const id = makeUploadId(file);
+
             const formData = new FormData();
             formData.append("file", file);
-            formData.append("type", "firmware");
-            formData.append("storage_index", "0");
+            formData.append("type", fileType);
+            formData.append("storage_index", storageIndex.toString());
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/upload/file");
@@ -46,9 +73,7 @@ export function Dropzone(
             xhr.upload.onprogress = (event) => {
                 if (event.lengthComputable) {
                     const percentComplete = Math.round((event.loaded / event.total) * 100);
-                    setFileUploads(prev =>
-                        prev.map(upload => upload.file == file ? {...upload, percentComplete} : upload)
-                    );
+                    updateUpload(id, {percentComplete});
                 }
             };
 
@@ -58,29 +83,23 @@ export function Dropzone(
                 } else {
                     console.error("Upload failed:", xhr.responseText);
                 }
-                setFileUploads(prev =>
-                    prev.map(upload => upload.file == file ? {...upload, serverResponded: true} : upload)
-                );
+                updateUpload(id, {serverResponded: true});
             };
 
             xhr.onerror = () => {
                 console.error("Upload error:", xhr.statusText);
-                setFileUploads(prev =>
-                    prev.map(upload => upload.file == file ? {...upload, serverResponded: true} : upload)
-                );
+                updateUpload(id, {serverResponded: true});
             };
 
             xhr.onabort = () => {
-                setFileUploads(prev => prev.filter(upload => upload.file !== file));
+                removeUpload(id);
             };
 
-            setFileUploads(prev =>
-                prev.map(upload => upload.file == file ? {...upload, xhr} : upload)
-            );
+            updateUpload(id, {xhr});
 
             xhr.send(formData);
         });
-    }, [getToken]);
+    }, [getToken, fileType, storageIndex, updateUpload, removeUpload]);
 
     const {
         getRootProps,
@@ -104,26 +123,27 @@ export function Dropzone(
                 </Card>
             </div>
             <div className="m-2 w-full">
-                {fileUploads.map((value, index) => (
-                    <Fragment key={index}>
+                {fileUploads.map((upload) => (
+                    <Fragment key={upload.id}>
                         <div className="flex items-center gap-4 w-full mt-2">
-                            {!value.serverResponded && <LoaderCircleIcon className="animate-spin"/>}
-                            {value.serverResponded && <CircleCheckBigIcon color="green"/>}
+                            {!upload.serverResponded && <LoaderCircleIcon className="animate-spin"/>}
+                            {upload.serverResponded && <CircleCheckBigIcon color="green"/>}
                             <div className="w-full">
-                                <span>{value.file.name}</span>
-                                <Progress value={value.percentComplete}/>
+                                <span>{upload.file.name}</span>
+                                <Progress value={upload.percentComplete}/>
                             </div>
-                            {value.percentComplete < 100 && <XIcon
-                                onClick={() => {
-                                    const current = fileUploads[index];
-                                    if (current.xhr) {
-                                        current.xhr.abort();
-                                    } else {
-                                        setFileUploads(prev => prev.filter((_, i) => i !== index));
-                                    }
-                                }}
-                                className="cursor-pointer"
-                            />}
+                            {upload.percentComplete < 100 && (
+                                <XIcon
+                                    onClick={() => {
+                                        if (upload.xhr) {
+                                            upload.xhr.abort();
+                                        } else {
+                                            removeUpload(upload.id);
+                                        }
+                                    }}
+                                    className="cursor-pointer"
+                                />
+                            )}
                         </div>
                     </Fragment>
                 ))}
