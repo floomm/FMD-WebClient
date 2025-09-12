@@ -17,7 +17,7 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (!initializing && isAuthenticated) {
-            void navigate("/", {replace: true});
+            navigate("/", {replace: true});
         }
     }, [isAuthenticated, initializing, navigate]);
 
@@ -52,7 +52,7 @@ function LoginForm({className, ...props}: React.ComponentProps<"div">) {
         if (!token) return;
 
         void (async () => {
-            await logIn();
+            await logIn(token);
             const dest = location?.state?.from?.pathname ?? "/";
             navigate(dest, {replace: true});
         })();
