@@ -4,7 +4,8 @@ import {Card} from "@/components/ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useAuth} from "@/lib/auth.tsx";
 import {Progress} from "@/components/ui/progress.tsx";
-import {CircleCheckBigIcon, LoaderCircleIcon, XIcon} from "lucide-react";
+import {CircleCheckBigIcon, CircleOffIcon, LoaderCircleIcon, XIcon} from "lucide-react";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 
 const makeUploadId = (file: File) => `${file.name}:${file.size.toString()}:${file.lastModified.toString()}`;
 
@@ -20,6 +21,7 @@ type FileUpload = {
     file: File;
     percentComplete: number;
     serverResponded: boolean;
+    error?: string;
     xhr?: XMLHttpRequest;
 }
 
@@ -79,16 +81,15 @@ export function Dropzone(
 
             xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    console.log("Upload complete:", xhr.responseText);
-                } else {
-                    console.error("Upload failed:", xhr.responseText);
+                    updateUpload(id, {serverResponded: true});
+                    return;
                 }
-                updateUpload(id, {serverResponded: true});
+
+                updateUpload(id, {serverResponded: true, error: xhr.responseText})
             };
 
             xhr.onerror = () => {
-                console.error("Upload error:", xhr.statusText);
-                updateUpload(id, {serverResponded: true});
+                updateUpload(id, {serverResponded: true, error: xhr.statusText});
             };
 
             xhr.onabort = () => {
@@ -122,29 +123,40 @@ export function Dropzone(
                     <p>{message}</p>
                 </Card>
             </div>
-            <div className="m-2 w-full">
+            <div className="w-full">
                 {fileUploads.map((upload) => (
                     <Fragment key={upload.id}>
-                        <div className="flex items-center gap-4 w-full mt-2">
-                            {!upload.serverResponded && <LoaderCircleIcon className="animate-spin"/>}
-                            {upload.serverResponded && <CircleCheckBigIcon color="green"/>}
-                            <div className="w-full">
-                                <span>{upload.file.name}</span>
-                                <Progress value={upload.percentComplete}/>
+                        {!upload.error && (
+                            <div className="flex items-center gap-4 w-full mt-2">
+                                {!upload.serverResponded && <LoaderCircleIcon className="animate-spin"/>}
+                                {upload.serverResponded && <CircleCheckBigIcon color="green"/>}
+                                <div className="w-full">
+                                    <span>{upload.file.name}</span>
+                                    <Progress value={upload.percentComplete}/>
+                                </div>
+                                {upload.percentComplete < 100 && (
+                                    <XIcon
+                                        onClick={() => {
+                                            if (upload.xhr) {
+                                                upload.xhr.abort();
+                                            } else {
+                                                removeUpload(upload.id);
+                                            }
+                                        }}
+                                        className="cursor-pointer"
+                                    />
+                                )}
+                            </div>)}
+
+                        {upload.error && (
+                            <div className="flex items-center gap-4 w-full mt-2">
+                                <Alert variant="destructive">
+                                    <CircleOffIcon/>
+                                    <AlertTitle>Error while uploading {upload.file.name}</AlertTitle>
+                                    <AlertDescription>{upload.error}</AlertDescription>
+                                </Alert>
                             </div>
-                            {upload.percentComplete < 100 && (
-                                <XIcon
-                                    onClick={() => {
-                                        if (upload.xhr) {
-                                            upload.xhr.abort();
-                                        } else {
-                                            removeUpload(upload.id);
-                                        }
-                                    }}
-                                    className="cursor-pointer"
-                                />
-                            )}
-                        </div>
+                        )}
                     </Fragment>
                 ))}
             </div>
