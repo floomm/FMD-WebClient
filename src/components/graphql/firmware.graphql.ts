@@ -16,6 +16,16 @@ export const CREATE_FIRMWARE_EXTRACTOR_JOB = gql(`
     }
 `);
 
+export const GET_RQ_JOB = gql(`
+    query GetRqJob($jobId: String!) {
+        rq_job(jobId: $jobId) {
+            isFailed
+            isFinished
+            status
+        }
+    }
+`);
+
 // ----------------------------------------------------------------------------------------------------
 // GET FIRMWARES (ALL FIELDS)
 // ----------------------------------------------------------------------------------------------------
