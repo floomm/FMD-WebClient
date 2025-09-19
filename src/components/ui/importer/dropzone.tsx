@@ -1,10 +1,11 @@
-import {useCallback, useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useState} from "react";
 import {useDropzone} from "react-dropzone";
 import {Card} from "@/components/ui/card.tsx";
 import {cn} from "@/lib/utils.ts";
 import {useAuth} from "@/lib/auth.tsx";
 import {Progress} from "@/components/ui/progress.tsx";
 import {
+    CircleAlertIcon,
     CircleCheckBigIcon,
     CircleOffIcon,
     LoaderCircleIcon, ShieldEllipsisIcon,
@@ -12,8 +13,18 @@ import {
 } from "lucide-react";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
-import {useMutation, useQuery} from "@apollo/client";
-import {CREATE_FIRMWARE_EXTRACTOR_JOB, GET_RQ_JOB} from "@/components/graphql/firmware.graphql.ts";
+import {ApolloQueryResult, useMutation, useQuery} from "@apollo/client";
+import {CREATE_FIRMWARE_EXTRACTOR_JOB, GET_RQ_JOB_LIST} from "@/components/graphql/firmware.graphql.ts";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {Exact, GetRqJobListQuery} from "@/__generated__/graphql.ts";
 
 type DropzoneProps = {
     className?: string;
@@ -34,23 +45,148 @@ type FileUpload = {
 
 const makeUploadId = (file: File) => `${file.name}:${file.size.toString()}:${file.lastModified.toString()}`;
 
-function JobStatus({jobId}: Readonly<{ jobId: string }>) {
-    const {data} = useQuery(GET_RQ_JOB, {
-        variables: {jobId},
-        pollInterval: 5000,
-        fetchPolicy: "cache-and-network",
-    });
+function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, refetchRqJobList}: Readonly<{
+    storageIndex: number;
+    fileUploads: FileUpload[];
+    setFileUploads: Dispatch<SetStateAction<FileUpload[]>>;
+    removeUpload: (id: string) => void;
+    refetchRqJobList: (variables?: (Partial<Exact<{
+        [p: string]: never
+    }>>)) => Promise<ApolloQueryResult<GetRqJobListQuery>>;
+}>) {
+    const cancelUpload = (upload: FileUpload) => {
+        if (upload.xhr) {
+            upload.xhr.abort();
+        } else {
+            removeUpload(upload.id);
+        }
+    }
 
-    const status = data?.rq_job?.status;
-    if (!status) return <ShieldEllipsisIcon/>;
+    const [createFirmwareExtractorJob] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
 
-    if (data.rq_job?.isFinished) {
+    return (
+        <Dialog open={fileUploads.length > 0 && !fileUploads.every(u => u.jobId)} modal={true}>
+            <DialogContent className="sm:max-w-5xl" showCloseButton={false}>
+                <DialogHeader>
+                    <DialogTitle>Uploading and validating file...</DialogTitle>
+                </DialogHeader>
+                <Table className="w-full">
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Filename</TableHead>
+                            <TableHead className="text-center">1. Upload to Server</TableHead>
+                            <TableHead className="text-center">2. Server Validation</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {fileUploads.map((upload) => {
+                            if (!upload.error) {
+                                return (
+                                    <TableRow key={upload.id}>
+                                        <TableCell>
+                                            <div>
+                                                <span>{upload.file.name}</span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center gap-2 w-full">
+                                                {upload.percentComplete < 100 && (
+                                                    <>
+                                                        <LoaderCircleIcon className="animate-spin"/>
+                                                        <Progress value={upload.percentComplete}/>
+                                                        <XIcon
+                                                            onClick={() => {
+                                                                cancelUpload(upload);
+                                                            }}
+                                                            className="cursor-pointer"
+                                                        />
+                                                    </>
+                                                )}
+                                                {upload.percentComplete >= 100 &&
+                                                    <CircleCheckBigIcon color="green"/>}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center">
+                                                {upload.percentComplete < 100 && (
+                                                    <ShieldEllipsisIcon/>
+                                                )}
+                                                {upload.percentComplete >= 100 && !upload.serverResponded && (
+                                                    <LoaderCircleIcon className="animate-spin"/>
+                                                )}
+                                                {upload.percentComplete >= 100 && upload.serverResponded && (
+                                                    <CircleCheckBigIcon color="green"/>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            }
+
+                            return (
+                                <TableRow key={upload.id}>
+                                    <TableCell>
+                                        <Alert variant="destructive">
+                                            <CircleOffIcon/>
+                                            <AlertTitle>Error while uploading {upload.file.name}</AlertTitle>
+                                            <AlertDescription>{upload.error}</AlertDescription>
+                                        </Alert>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="destructive" onClick={() => {
+                            fileUploads.forEach((upload: FileUpload) => {
+                                cancelUpload(upload);
+                            })
+                        }}>
+                            Cancel
+                        </Button>
+                    </DialogClose>
+                    <Button
+                        disabled={!fileUploads.every(upload => upload.serverResponded)}
+                        onClick={() => {
+                            if (
+                                fileUploads.every(upload => upload.serverResponded) &&
+                                !fileUploads.every(upload => upload.jobId)
+                            ) {
+                                createFirmwareExtractorJob({variables: {storageIndex}})
+                                    .then(res => {
+                                        const jobId = res.data?.createFirmwareExtractorJob?.jobId;
+                                        if (jobId) {
+                                            setFileUploads(prev =>
+                                                prev.map(upload => ({...upload, jobId}))
+                                            );
+                                        }
+                                        void refetchRqJobList();
+                                    })
+                                    .catch(console.error);
+                            }
+                        }}>
+                        Extract Firmwares
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function JobStatus({status, isFinished, isFailed}: Readonly<{
+    status: string;
+    isFinished?: boolean | null;
+    isFailed?: boolean | null;
+}>) {
+    if (isFinished) {
         return (
             <CircleCheckBigIcon color="green"/>
         );
     }
 
-    if (data.rq_job?.isFailed) {
+    if (isFailed) {
         return (
             <CircleOffIcon color="red"/>
         );
@@ -74,7 +210,13 @@ export function Dropzone(
 ) {
     const {getToken} = useAuth();
     const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
-    const [createFirmwareExtractorJob] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
+    const {data: rqJobListData, refetch: refetchRqJobList} = useQuery(GET_RQ_JOB_LIST, {
+        fetchPolicy: "cache-and-network",
+        pollInterval: 5000,
+    });
+
+    const firmwareImportJobs = rqJobListData?.rq_job_list
+        ?.filter(job => job?.funcName === "firmware_handler.firmware_importer.start_firmware_mass_import")
 
     const updateUpload = useCallback((id: string, patch: Partial<FileUpload>) => {
         setFileUploads(prev => prev.map(upload => (upload.id === id ? {...upload, ...patch} : upload)));
@@ -141,25 +283,6 @@ export function Dropzone(
         });
     }, [getToken, fileType, storageIndex, updateUpload, removeUpload]);
 
-    useEffect(() => {
-        if (
-            fileUploads.length > 0 &&
-            fileUploads.every(upload => upload.serverResponded) &&
-            fileUploads.every(upload => !upload.jobId)
-        ) {
-            createFirmwareExtractorJob({variables: {storageIndex}})
-                .then(res => {
-                    const jobId = res.data?.createFirmwareExtractorJob?.jobId;
-                    if (jobId) {
-                        setFileUploads(prev =>
-                            prev.map(upload => ({...upload, jobId}))
-                        );
-                    }
-                })
-                .catch(console.error);
-        }
-    }, [createFirmwareExtractorJob, fileUploads, storageIndex]);
-
     const {
         getRootProps,
         getInputProps
@@ -181,88 +304,49 @@ export function Dropzone(
                     <p>{message}</p>
                 </Card>
             </div>
-            {fileUploads.length > 0 && (
+            <UploadDialog
+                storageIndex={storageIndex}
+                fileUploads={fileUploads}
+                setFileUploads={setFileUploads}
+                removeUpload={removeUpload}
+                refetchRqJobList={refetchRqJobList}
+            />
+            {firmwareImportJobs && firmwareImportJobs.length > 0 && (
                 <Table className="w-full mt-2">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="text-center">Filename</TableHead>
-                            <TableHead className="text-center">1. Upload to Server</TableHead>
-                            <TableHead className="text-center">2. Server Validation</TableHead>
-                            <TableHead className="text-center">3. Firmware Extraction</TableHead>
+                            <TableHead>Job ID</TableHead>
+                            <TableHead>Started At</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {fileUploads.map((upload) => {
-                            if (!upload.error) {
+                        {firmwareImportJobs.map((job) => {
+                            if (job) {
                                 return (
-                                    <TableRow key={upload.id}>
+                                    <TableRow key={job.id}>
                                         <TableCell>
-                                            <div className="flex items-center justify-center">
-                                                <span>{upload.file.name}</span>
-                                            </div>
+                                            <span>{job.id}</span>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="flex items-center justify-center gap-2 w-full">
-                                                {upload.percentComplete < 100 && (
+                                            <span>{job.startedAt}</span>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex items-center justify-center">
+                                                {job.status ? (
+                                                    <JobStatus status={job.status} isFinished={job.isFinished}
+                                                               isFailed={job.isFailed}/>
+                                                ) : (
                                                     <>
-                                                        <LoaderCircleIcon className="animate-spin"/>
-                                                        <Progress value={upload.percentComplete}/>
-                                                        <XIcon
-                                                            onClick={() => {
-                                                                if (upload.xhr) {
-                                                                    upload.xhr.abort();
-                                                                } else {
-                                                                    removeUpload(upload.id);
-                                                                }
-                                                            }}
-                                                            className="cursor-pointer"
-                                                        />
+                                                        <CircleAlertIcon color="red"/>
+                                                        <span>Unknown status</span>
                                                     </>
-                                                )}
-                                                {upload.percentComplete >= 100 && <CircleCheckBigIcon color="green"/>}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center justify-center">
-                                                {upload.percentComplete < 100 && (
-                                                    <ShieldEllipsisIcon/>
-                                                )}
-                                                {upload.percentComplete >= 100 && !upload.serverResponded && (
-                                                    <LoaderCircleIcon className="animate-spin"/>
-                                                )}
-                                                {upload.percentComplete >= 100 && upload.serverResponded && (
-                                                    <CircleCheckBigIcon color="green"/>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex items-center justify-center">
-                                                {upload.jobId && (
-                                                    <JobStatus jobId={upload.jobId}/>
-                                                )}
-                                                {!upload.jobId && !upload.serverResponded && (
-                                                    <ShieldEllipsisIcon/>
-                                                )}
-                                                {!upload.jobId && upload.serverResponded && (
-                                                    <LoaderCircleIcon className="animate-spin"/>
                                                 )}
                                             </div>
                                         </TableCell>
                                     </TableRow>
                                 );
                             }
-
-                            return (
-                                <TableRow key={upload.id}>
-                                    <TableCell>
-                                        <Alert variant="destructive">
-                                            <CircleOffIcon/>
-                                            <AlertTitle>Error while uploading {upload.file.name}</AlertTitle>
-                                            <AlertDescription>{upload.error}</AlertDescription>
-                                        </Alert>
-                                    </TableCell>
-                                </TableRow>
-                            );
                         })}
                     </TableBody>
                 </Table>

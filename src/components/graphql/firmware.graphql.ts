@@ -26,6 +26,19 @@ export const GET_RQ_JOB = gql(`
     }
 `);
 
+export const GET_RQ_JOB_LIST = gql(`
+    query GetRqJobList {
+        rq_job_list {
+            funcName
+            id
+            isFailed
+            isFinished
+            startedAt
+            status
+        }
+    }
+`);
+
 // ----------------------------------------------------------------------------------------------------
 // GET FIRMWARES (ALL FIELDS)
 // ----------------------------------------------------------------------------------------------------

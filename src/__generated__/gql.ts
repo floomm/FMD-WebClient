@@ -25,6 +25,7 @@ type Documents = {
     "\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n": typeof types.GetCurrentUserEmailAndUsernameDocument,
     "\n    mutation CreateFirmwareExtractorJob($storageIndex: Int!) {\n        createFirmwareExtractorJob(\n            createFuzzyHashes: false\n            queueName: \"high-python\"\n            storageIndex: $storageIndex\n        ) {\n            jobId\n        }\n    }\n": typeof types.CreateFirmwareExtractorJobDocument,
     "\n    query GetRqJob($jobId: String!) {\n        rq_job(jobId: $jobId) {\n            isFailed\n            isFinished\n            status\n        }\n    }\n": typeof types.GetRqJobDocument,
+    "\n    query GetRqJobList {\n        rq_job_list {\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": typeof types.GetRqJobListDocument,
     "\n    query GetFirmwareObjectIdList {\n        android_firmware_id_list\n    }\n": typeof types.GetFirmwareObjectIdListDocument,
     "\n    fragment FirmwareTableRow on AndroidFirmwareType {\n        id\n        absoluteStorePath\n        aecsBuildFilePath\n#        fileSizeBytes\n        filename\n        hasFileIndex\n        hasFuzzyHashIndex\n        indexedDate\n        md5\n        originalFilename\n        osVendor\n#        partitionInfoDict\n        relativeStorePath\n        sha1\n        sha256\n        tag\n        versionDetected\n        pk\n    }\n": typeof types.FirmwareTableRowFragmentDoc,
     "\n    query GetFirmwaresByObjectIds($objectIds: [String!]!) {\n        android_firmware_list(objectIdList: $objectIds) {\n            ...FirmwareTableRow\n        }\n    }\n": typeof types.GetFirmwaresByObjectIdsDocument,
@@ -46,6 +47,7 @@ const documents: Documents = {
     "\n    query GetCurrentUserEmailAndUsername {\n        me {\n            email\n            username\n        }\n    }\n": types.GetCurrentUserEmailAndUsernameDocument,
     "\n    mutation CreateFirmwareExtractorJob($storageIndex: Int!) {\n        createFirmwareExtractorJob(\n            createFuzzyHashes: false\n            queueName: \"high-python\"\n            storageIndex: $storageIndex\n        ) {\n            jobId\n        }\n    }\n": types.CreateFirmwareExtractorJobDocument,
     "\n    query GetRqJob($jobId: String!) {\n        rq_job(jobId: $jobId) {\n            isFailed\n            isFinished\n            status\n        }\n    }\n": types.GetRqJobDocument,
+    "\n    query GetRqJobList {\n        rq_job_list {\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": types.GetRqJobListDocument,
     "\n    query GetFirmwareObjectIdList {\n        android_firmware_id_list\n    }\n": types.GetFirmwareObjectIdListDocument,
     "\n    fragment FirmwareTableRow on AndroidFirmwareType {\n        id\n        absoluteStorePath\n        aecsBuildFilePath\n#        fileSizeBytes\n        filename\n        hasFileIndex\n        hasFuzzyHashIndex\n        indexedDate\n        md5\n        originalFilename\n        osVendor\n#        partitionInfoDict\n        relativeStorePath\n        sha1\n        sha256\n        tag\n        versionDetected\n        pk\n    }\n": types.FirmwareTableRowFragmentDoc,
     "\n    query GetFirmwaresByObjectIds($objectIds: [String!]!) {\n        android_firmware_list(objectIdList: $objectIds) {\n            ...FirmwareTableRow\n        }\n    }\n": types.GetFirmwaresByObjectIdsDocument,
@@ -114,6 +116,10 @@ export function gql(source: "\n    mutation CreateFirmwareExtractorJob($storageI
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    query GetRqJob($jobId: String!) {\n        rq_job(jobId: $jobId) {\n            isFailed\n            isFinished\n            status\n        }\n    }\n"): (typeof documents)["\n    query GetRqJob($jobId: String!) {\n        rq_job(jobId: $jobId) {\n            isFailed\n            isFinished\n            status\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query GetRqJobList {\n        rq_job_list {\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n"): (typeof documents)["\n    query GetRqJobList {\n        rq_job_list {\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

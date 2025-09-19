@@ -49,8 +49,8 @@ export function ImporterPage() {
     );
 
     return (
-        <BasePage title="Firmware Import">
-            <TypographyH2>Extract Firmwares or Import APKs</TypographyH2>
+        <BasePage title="Importer">
+            <TypographyH2>Import Firmwares or APKs</TypographyH2>
             <Dropzone
                 className="max-w-5xl w-full"
                 fileType="firmware"
