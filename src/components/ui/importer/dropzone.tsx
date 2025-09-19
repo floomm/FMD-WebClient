@@ -7,7 +7,7 @@ import {Progress} from "@/components/ui/progress.tsx";
 import {
     CircleAlertIcon,
     CircleCheckBigIcon,
-    CircleOffIcon,
+    CloudAlertIcon,
     LoaderCircleIcon, ShieldEllipsisIcon,
     XIcon
 } from "lucide-react";
@@ -29,7 +29,6 @@ import {Exact, GetRqJobListQuery} from "@/__generated__/graphql.ts";
 type DropzoneProps = {
     className?: string;
     message?: string;
-    fileType: "firmware" | "apk";
     storageIndex?: number;
 }
 
@@ -56,7 +55,11 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
 }>) {
     const cancelUpload = (upload: FileUpload) => {
         if (upload.xhr) {
+            const readyStateBefore = upload.xhr.readyState;
             upload.xhr.abort();
+            if (readyStateBefore === XMLHttpRequest.DONE || readyStateBefore === XMLHttpRequest.UNSENT) {
+                removeUpload(upload.id);
+            }
         } else {
             removeUpload(upload.id);
         }
@@ -68,7 +71,7 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
         <Dialog open={fileUploads.length > 0 && !fileUploads.every(u => u.jobId)} modal={true}>
             <DialogContent className="sm:max-w-5xl" showCloseButton={false}>
                 <DialogHeader>
-                    <DialogTitle>Uploading and validating file...</DialogTitle>
+                    <DialogTitle>Uploading and validating...</DialogTitle>
                 </DialogHeader>
                 <Table className="w-full">
                     <TableHeader>
@@ -125,9 +128,9 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
 
                             return (
                                 <TableRow key={upload.id}>
-                                    <TableCell>
+                                    <TableCell colSpan={3}>
                                         <Alert variant="destructive">
-                                            <CircleOffIcon/>
+                                            <CloudAlertIcon/>
                                             <AlertTitle>Error while uploading {upload.file.name}</AlertTitle>
                                             <AlertDescription>{upload.error}</AlertDescription>
                                         </Alert>
@@ -148,7 +151,10 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
                         </Button>
                     </DialogClose>
                     <Button
-                        disabled={!fileUploads.every(upload => upload.serverResponded)}
+                        disabled={
+                            !fileUploads.every(upload => upload.serverResponded) ||
+                            fileUploads.every(upload => upload.error)
+                        }
                         onClick={() => {
                             if (
                                 fileUploads.every(upload => upload.serverResponded) &&
@@ -188,7 +194,7 @@ function JobStatus({status, isFinished, isFailed}: Readonly<{
 
     if (isFailed) {
         return (
-            <CircleOffIcon color="red"/>
+            <CircleAlertIcon color="red"/>
         );
     }
 
@@ -204,7 +210,6 @@ export function Dropzone(
     {
         className = "",
         message = "Drag 'n' drop files here, or click to select files",
-        fileType,
         storageIndex = 0,
     }: Readonly<DropzoneProps>
 ) {
@@ -247,7 +252,7 @@ export function Dropzone(
 
             const formData = new FormData();
             formData.append("file", file);
-            formData.append("type", fileType);
+            formData.append("type", "firmware");
             formData.append("storage_index", storageIndex.toString());
 
             const xhr = new XMLHttpRequest();
@@ -281,7 +286,7 @@ export function Dropzone(
             updateUpload(id, {xhr});
             xhr.send(formData);
         });
-    }, [getToken, fileType, storageIndex, updateUpload, removeUpload]);
+    }, [getToken, storageIndex, updateUpload, removeUpload]);
 
     const {
         getRootProps,
@@ -291,6 +296,7 @@ export function Dropzone(
             // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
             'application/zip': ['.zip'],
             'application/x-zip-compressed': ['.zip'],
+            'application/vnd.android.package-archive': ['.apk'],
         },
         multiple: true,
         onDrop,
