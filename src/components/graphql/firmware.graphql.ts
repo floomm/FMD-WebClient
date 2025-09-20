@@ -1,5 +1,23 @@
 import {gql} from "@/__generated__";
 
+
+// ----------------------------------------------------------------------------------------------------
+// RQ JOBS
+// ----------------------------------------------------------------------------------------------------
+
+export const GET_RQ_JOB_LIST = gql(`
+    query GetRqJobList {
+        rq_job_list {
+            funcName
+            id
+            isFailed
+            isFinished
+            startedAt
+            status
+        }
+    }
+`);
+
 // ----------------------------------------------------------------------------------------------------
 // FIRMWARE EXTRACTION
 // ----------------------------------------------------------------------------------------------------
@@ -16,25 +34,17 @@ export const CREATE_FIRMWARE_EXTRACTOR_JOB = gql(`
     }
 `);
 
-export const GET_RQ_JOB = gql(`
-    query GetRqJob($jobId: String!) {
-        rq_job(jobId: $jobId) {
-            isFailed
-            isFinished
-            status
-        }
-    }
-`);
+// ----------------------------------------------------------------------------------------------------
+// APK IMPORT
+// ----------------------------------------------------------------------------------------------------
 
-export const GET_RQ_JOB_LIST = gql(`
-    query GetRqJobList {
-        rq_job_list {
-            funcName
-            id
-            isFailed
-            isFinished
-            startedAt
-            status
+export const CREATE_APP_IMPORT_JOB = gql(`
+    mutation CreateAppImportJob($storageIndex: Int!) {
+        createAppImportJob(
+            queueName: "high-python",
+            storageIndex: $storageIndex
+        ) {
+            jobId
         }
     }
 `);

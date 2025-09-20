@@ -50,7 +50,7 @@ export function ImporterPage() {
 
     return (
         <BasePage title="Importer">
-            <TypographyH2>Import Firmwares or APKs</TypographyH2>
+            <TypographyH2>Import Firmwares and APKs</TypographyH2>
             <Dropzone className="max-w-5xl w-full"/>
             <Separator></Separator>
             <TypographyH2>Extracted Firmwares</TypographyH2>

@@ -8,21 +8,19 @@ import {
     CircleAlertIcon,
     CircleCheckBigIcon,
     CloudAlertIcon,
-    LoaderCircleIcon, ShieldEllipsisIcon,
+    LoaderCircleIcon,
+    ShieldEllipsisIcon,
     XIcon
 } from "lucide-react";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table.tsx";
 import {ApolloQueryResult, useMutation, useQuery} from "@apollo/client";
-import {CREATE_FIRMWARE_EXTRACTOR_JOB, GET_RQ_JOB_LIST} from "@/components/graphql/firmware.graphql.ts";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog.tsx";
+    CREATE_APP_IMPORT_JOB,
+    CREATE_FIRMWARE_EXTRACTOR_JOB,
+    GET_RQ_JOB_LIST
+} from "@/components/graphql/firmware.graphql.ts";
+import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from "@/components/ui/dialog.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {Exact, GetRqJobListQuery} from "@/__generated__/graphql.ts";
 
@@ -32,17 +30,29 @@ type DropzoneProps = {
     storageIndex?: number;
 }
 
+type UploadType = "firmware" | "apk";
+
 type FileUpload = {
     id: string;
     file: File;
+    type: UploadType;
     percentComplete: number;
     serverResponded: boolean;
     error?: string;
     xhr?: XMLHttpRequest;
-    jobId?: string;
+    importStarted?: boolean;
 }
 
+const MIME_TYPE_ZIP = "application/zip";
+const MIME_TYPE_ZIP_COMPRESSED = "application/x-zip-compressed";
+const MIME_TYPE_APK = "application/vnd.android.package-archive";
+
+const FIRMWARE_IMPORT_JOB_FUNC_NAME = "firmware_handler.firmware_importer.start_firmware_mass_import";
+const APP_IMPORT_JOB_FUNC_NAME = "android_app_importer.standalone_importer.start_android_app_standalone_importer";
+
 const makeUploadId = (file: File) => `${file.name}:${file.size.toString()}:${file.lastModified.toString()}`;
+
+const getUploadType = (file: File): UploadType => file.type === MIME_TYPE_APK ? "apk" : "firmware";
 
 function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, refetchRqJobList}: Readonly<{
     storageIndex: number;
@@ -66,9 +76,10 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
     }
 
     const [createFirmwareExtractorJob] = useMutation(CREATE_FIRMWARE_EXTRACTOR_JOB);
+    const [createAppImportJob] = useMutation(CREATE_APP_IMPORT_JOB);
 
     return (
-        <Dialog open={fileUploads.length > 0 && !fileUploads.every(u => u.jobId)} modal={true}>
+        <Dialog open={fileUploads.length > 0 && !fileUploads.every(u => u.importStarted)} modal={true}>
             <DialogContent className="sm:max-w-5xl" showCloseButton={false}>
                 <DialogHeader>
                     <DialogTitle>Uploading and validating...</DialogTitle>
@@ -156,24 +167,18 @@ function UploadDialog({storageIndex, fileUploads, setFileUploads, removeUpload, 
                             fileUploads.every(upload => upload.error)
                         }
                         onClick={() => {
-                            if (
-                                fileUploads.every(upload => upload.serverResponded) &&
-                                !fileUploads.every(upload => upload.jobId)
-                            ) {
-                                createFirmwareExtractorJob({variables: {storageIndex}})
-                                    .then(res => {
-                                        const jobId = res.data?.createFirmwareExtractorJob?.jobId;
-                                        if (jobId) {
-                                            setFileUploads(prev =>
-                                                prev.map(upload => ({...upload, jobId}))
-                                            );
-                                        }
-                                        void refetchRqJobList();
-                                    })
-                                    .catch(console.error);
+                            if (fileUploads.some(upload => upload.type === "firmware")) {
+                                void createFirmwareExtractorJob({variables: {storageIndex}});
                             }
+
+                            if (fileUploads.some(upload => upload.type === "apk")) {
+                                void createAppImportJob({variables: {storageIndex}});
+                            }
+
+                            setFileUploads(prev => prev.map(upload => ({...upload, importStarted: true})))
+                            void refetchRqJobList();
                         }}>
-                        Extract Firmwares
+                        Import
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -220,8 +225,13 @@ export function Dropzone(
         pollInterval: 5000,
     });
 
-    const firmwareImportJobs = rqJobListData?.rq_job_list
-        ?.filter(job => job?.funcName === "firmware_handler.firmware_importer.start_firmware_mass_import")
+    const importJobs = rqJobListData?.rq_job_list
+        ?.filter(job =>
+            job?.funcName === FIRMWARE_IMPORT_JOB_FUNC_NAME ||
+            job?.funcName === APP_IMPORT_JOB_FUNC_NAME
+        )
+        .sort((a, b) => new Date(b?.startedAt).getTime() - new Date(a?.startedAt).getTime());
+
 
     const updateUpload = useCallback((id: string, patch: Partial<FileUpload>) => {
         setFileUploads(prev => prev.map(upload => (upload.id === id ? {...upload, ...patch} : upload)));
@@ -242,7 +252,8 @@ export function Dropzone(
 
         setFileUploads(acceptedFiles.map(file => ({
             id: makeUploadId(file),
-            file,
+            file: file,
+            type: getUploadType(file),
             percentComplete: 0,
             serverResponded: false,
         })));
@@ -252,7 +263,7 @@ export function Dropzone(
 
             const formData = new FormData();
             formData.append("file", file);
-            formData.append("type", "firmware");
+            formData.append("type", getUploadType(file));
             formData.append("storage_index", storageIndex.toString());
 
             const xhr = new XMLHttpRequest();
@@ -293,10 +304,9 @@ export function Dropzone(
         getInputProps
     } = useDropzone({
         accept: {
-            // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types
-            'application/zip': ['.zip'],
-            'application/x-zip-compressed': ['.zip'],
-            'application/vnd.android.package-archive': ['.apk'],
+            [MIME_TYPE_ZIP]: ['.zip'],
+            [MIME_TYPE_ZIP_COMPRESSED]: ['.zip'],
+            [MIME_TYPE_APK]: ['.apk'],
         },
         multiple: true,
         onDrop,
@@ -317,17 +327,18 @@ export function Dropzone(
                 removeUpload={removeUpload}
                 refetchRqJobList={refetchRqJobList}
             />
-            {firmwareImportJobs && firmwareImportJobs.length > 0 && (
+            {importJobs && importJobs.length > 0 && (
                 <Table className="w-full mt-2">
                     <TableHeader>
                         <TableRow>
                             <TableHead>Job ID</TableHead>
                             <TableHead>Started At</TableHead>
+                            <TableHead>Type</TableHead>
                             <TableHead className="text-center">Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {firmwareImportJobs.map((job) => {
+                        {importJobs.map((job) => {
                             if (job) {
                                 return (
                                     <TableRow key={job.id}>
@@ -336,6 +347,14 @@ export function Dropzone(
                                         </TableCell>
                                         <TableCell>
                                             <span>{job.startedAt}</span>
+                                        </TableCell>
+                                        <TableCell>
+                                            {job.funcName === FIRMWARE_IMPORT_JOB_FUNC_NAME && (
+                                                <span>Firmware</span>
+                                            )}
+                                            {job.funcName === APP_IMPORT_JOB_FUNC_NAME && (
+                                                <span>APK</span>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex items-center justify-center">
