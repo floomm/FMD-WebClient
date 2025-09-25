@@ -1,6 +1,4 @@
 import {BasePage} from "@/pages/base-page.tsx";
-import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable.tsx";
-import {TypographyH4} from "@/components/ui/typography/headings.tsx";
 import {CheckboxForm} from "@/components/ui/checkbox-form.tsx";
 import {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
@@ -24,23 +22,26 @@ import {
     GET_APPS_BY_OBJECT_IDS_SCANNER
 } from "@/components/graphql/app.graphql.ts";
 import {buildSelectEntityColumn} from "@/components/ui/firmware-action-columns.tsx";
+import {Stepper} from "@/components/ui/stepper.tsx";
+import {TypographyH4} from "@/components/ui/typography/headings.tsx";
 
 export function ScannerPage() {
     return (
         <BasePage title="App Scanner">
-            <ResizablePanelGroup direction="horizontal" className="border-t border-b">
-                <ResizablePanel defaultSize={40}>
-                    <FirmwaresPanel/>
-                </ResizablePanel>
-                <ResizableHandle withHandle/>
-                <ResizablePanel defaultSize={40}>
-                    <AppsPanel/>
-                </ResizablePanel>
-                <ResizableHandle withHandle/>
-                <ResizablePanel defaultSize={20}>
-                    <ScannersPanel/>
-                </ResizablePanel>
-            </ResizablePanelGroup>
+            <Stepper
+                className="w-full"
+                stepComponents={[
+                    FirmwaresPanel(),
+                    AppsPanel(),
+                    ScannersPanel(),
+                ]}
+                numberOfSteps={3}
+                stepLabels={[
+                    "Firmwares",
+                    "Apps",
+                    "Scanners",
+                ]}
+            />
         </BasePage>
     );
 }
@@ -90,8 +91,8 @@ function FirmwaresPanel() {
     );
 
     return (
-        <div className="flex flex-col p-4 gap-4">
-            <TypographyH4>Firmwares</TypographyH4>
+        <div className="flex flex-col px-2 gap-4">
+            <TypographyH4>Select firmwares</TypographyH4>
             <StateHandlingScrollableDataTable
                 columns={columns}
                 data={firmwares}
@@ -170,8 +171,8 @@ function AppsPanel() {
     );
 
     return (
-        <div className="flex flex-col p-4 gap-4">
-            <TypographyH4>Apps</TypographyH4>
+        <div className="flex flex-col px-2 gap-4">
+            <TypographyH4>Select apps</TypographyH4>
             <StateHandlingScrollableDataTable
                 columns={columns}
                 data={apps}
@@ -201,8 +202,8 @@ function ScannersPanel() {
     ];
 
     return (
-        <div className="flex flex-col p-4 gap-4">
-            <TypographyH4>Scanners</TypographyH4>
+        <div className="flex flex-col px-2 gap-4">
+            <TypographyH4>Select scanners</TypographyH4>
             <CheckboxForm
                 items={scanners.map((scanner) => ({
                     id: scanner,
