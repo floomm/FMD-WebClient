@@ -6,8 +6,10 @@ import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {BasePage} from "@/pages/base-page.tsx";
 import {StateHandlingScrollableDataTable} from "@/components/ui/table/data-table.tsx";
 import {APP_ALL, GET_APPS_BY_OBJECT_IDS} from "@/components/graphql/app.graphql.ts";
+import {buildAppActionColumns} from "@/components/ui/firmware-action-columns.tsx";
 
 const columns: ColumnDef<AppAllFragment>[] = [
+    ...buildAppActionColumns<AppAllFragment>(),
     {
         accessorKey: "id",
         header: "ID",
