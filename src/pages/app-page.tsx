@@ -8,7 +8,7 @@ import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {AppAllFragment} from "@/__generated__/graphql.ts";
-import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table.tsx";
+import {EntityTable} from "@/components/ui/entity-table.tsx";
 
 export function AppPage() {
     const {appId} = useParams<{ appId: string }>();
@@ -51,30 +51,7 @@ export function AppPage() {
 
         return (
             <BasePage title="App">
-                <Table>
-                    <TableBody>
-                        {Object.entries(app).map(([key, value]) => (
-                            <TableRow key={key}>
-                                <TableCell className="font-medium">{key}</TableCell>
-                                <TableCell className="text-muted-foreground whitespace-pre-wrap">
-                                    {(() => {
-                                        let displayValue = String(value);
-
-                                        try {
-                                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-argument
-                                            const parsed = JSON.parse(value);
-                                            displayValue = JSON.stringify(parsed, null, 2);
-                                        } catch {
-                                            // ignore, we leave it as string if parsing fails
-                                        }
-
-                                        return displayValue;
-                                    })()}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <EntityTable entity={app}/>
             </BasePage>
         );
     }
