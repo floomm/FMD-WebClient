@@ -9,6 +9,7 @@ import {ScannerPage} from "@/pages/scanner-page.tsx";
 import {FirmwaresPage} from "@/pages/firmwares-page.tsx";
 import {FirmwarePage} from "@/pages/firmware-page.tsx";
 import {AppsPage} from "@/pages/apps-page.tsx";
+import {AppPage} from "@/pages/app-page.tsx";
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/firmwares" element={<FirmwaresPage/>}/>
                 <Route path="/firmwares/:firmwareId" element={<FirmwarePage/>}/>
                 <Route path="/apps" element={<AppsPage/>}/>
+                <Route path="/apps/:appId" element={<AppPage/>}/>
                 <Route path="*" element={<Navigate to="/" replace/>}/>
                 {/*<Route path="*" element={<NotFoundPage/>}/>*/} {/*TOOD: Add 404 page?*/}
             </Route>

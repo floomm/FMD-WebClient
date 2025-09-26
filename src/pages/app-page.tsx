@@ -1,58 +1,59 @@
-import {BasePage} from "@/pages/base-page.tsx";
 import {useParams} from "react-router";
+import {BasePage} from "@/pages/base-page.tsx";
 import {useQuery} from "@apollo/client";
-import {FIRMWARE_ALL, GET_FIRMWARES_BY_OBJECT_IDS} from "@/components/graphql/firmware.graphql.ts";
-import {FirmwareAllFragment} from "@/__generated__/graphql.ts";
+import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
+import {APP_ALL, GET_APP_BY_ID} from "@/components/graphql/app.graphql.ts";
 import {useFragment} from "@/__generated__";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
-import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
+import {AppAllFragment} from "@/__generated__/graphql.ts";
 import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table.tsx";
 
-export function FirmwarePage() {
-    const {firmwareId} = useParams<{ firmwareId: string }>();
+export function AppPage() {
+    const {appId} = useParams<{ appId: string }>();
 
     const {
-        loading: firmwaresLoading,
-        data: firmwaresData,
-    } = useQuery(GET_FIRMWARES_BY_OBJECT_IDS, {
-        variables: {objectIds: convertIdToObjectId(firmwareId as string)},
-        skip: !firmwareId,
+        loading: appsLoading,
+        data: appsData,
+    } = useQuery(GET_APP_BY_ID, {
+        variables: {id: appId as string},
+        skip: !appId,
     });
 
-    if (!firmwareId) {
+    if (!appId) {
         return (
-            <BasePage title={"Firmware (missing ID)"}>
+            <BasePage title={"App (missing ID)"}>
                 <Alert variant="destructive">
                     <AlertCircleIcon/>
-                    <AlertTitle>Missing firmware ID.</AlertTitle>
+                    <AlertTitle>Missing App ID.</AlertTitle>
                 </Alert>
             </BasePage>
         );
     }
 
-    if (firmwaresLoading) {
+    if (appsLoading) {
         return (
-            <BasePage title="Firmware">
+            <BasePage title="App">
                 <Skeleton className="w-full h-[400px]"/>
             </BasePage>
         );
     }
 
-    const firmwares = (firmwaresData?.android_firmware_connection?.edges ?? [])
+    const apps = (appsData?.android_firmware_connection?.edges ?? [])
+        .flatMap(firmwareEdge => (firmwareEdge?.node?.androidAppIdList?.edges ?? []))
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        .map(edge => useFragment(FIRMWARE_ALL, edge?.node))
+        .map(edge => useFragment(APP_ALL, edge?.node))
         .filter(isNonNullish)
 
-    if (firmwares.length === 1) {
-        const firmware: FirmwareAllFragment = firmwares[0];
+    if (apps.length === 1) {
+        const app: AppAllFragment = apps[0];
 
         return (
-            <BasePage title="Firmware">
+            <BasePage title="App">
                 <Table>
                     <TableBody>
-                        {Object.entries(firmware).map(([key, value]) => (
+                        {Object.entries(app).map(([key, value]) => (
                             <TableRow key={key}>
                                 <TableCell className="font-medium">{key}</TableCell>
                                 <TableCell className="text-muted-foreground whitespace-pre-wrap">
@@ -78,23 +79,12 @@ export function FirmwarePage() {
         );
     }
 
-    if (firmwares.length > 1) {
+    if (apps.length < 1) {
         return (
-            <BasePage title={"Firmware (multiple matches)"}>
+            <BasePage title={"App (no match)"}>
                 <Alert variant="destructive">
                     <AlertCircleIcon/>
-                    <AlertTitle>Found multiple firmwares with the same ID.</AlertTitle>
-                </Alert>
-            </BasePage>
-        );
-    }
-
-    if (firmwares.length < 1) {
-        return (
-            <BasePage title={"Firmware (no match)"}>
-                <Alert variant="destructive">
-                    <AlertCircleIcon/>
-                    <AlertTitle>Could not find a firmware with ID '{firmwareId}'.</AlertTitle>
+                    <AlertTitle>Could not find an app with ID '{appId}'.</AlertTitle>
                 </Alert>
             </BasePage>
         );
