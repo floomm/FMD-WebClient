@@ -27,7 +27,7 @@ const columns: ColumnDef<FirmwareAllFragment>[] = [
     },
     {
         accessorKey: "filename",
-        header: "Filename",
+        header: "File name",
     },
     {
         accessorKey: "hasFileIndex",

@@ -12,6 +12,62 @@ const columns: ColumnDef<AppAllFragment>[] = [
         accessorKey: "id",
         header: "ID",
     },
+    {
+        accessorKey: "absoluteStorePath",
+        header: "Absolute Store Path",
+    },
+    {
+        accessorKey: "androidManifestDict",
+        header: "Android Manifest Dict",
+    },
+    {
+        accessorKey: "fileSizeBytes",
+        header: "File Size Bytes",
+    },
+    {
+        accessorKey: "filename",
+        header: "File name",
+    },
+    {
+        accessorKey: "indexedDate",
+        header: "Indexed Date",
+    },
+    {
+        accessorKey: "md5",
+        header: "MD5",
+    },
+    {
+        accessorKey: "originalFilename",
+        header: "Original Filename",
+    },
+    {
+        accessorKey: "packagename",
+        header: "Package name",
+    },
+    {
+        accessorKey: "partitionName",
+        header: "Partition Name",
+    },
+    {
+        accessorKey: "pk",
+        header: "Object ID",
+    },
+    {
+        accessorKey: "relativeFirmwarePath",
+        header: "Relative Firmware Path",
+    },
+    {
+        accessorKey: "relativeStorePath",
+        header: "Relative Store Path",
+    },
+    {
+        accessorKey: "sha1",
+        header: "SHA-1",
+    },
+    {
+        accessorKey: "sha256",
+        header: "SHA-256",
+    },
 ];
 
 export function AppsPage() {
@@ -28,7 +84,7 @@ export function AppsPage() {
         .filter(isNonNullish)
 
     return (
-        <BasePage title="Firmwares">
+        <BasePage title="Apps">
             <StateHandlingScrollableDataTable
                 columns={columns}
                 data={apps}
