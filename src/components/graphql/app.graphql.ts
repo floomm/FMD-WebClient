@@ -19,7 +19,43 @@ export const CREATE_APP_IMPORT_JOB = gql(`
 // GET APPS (ALL FIELDS)
 // ----------------------------------------------------------------------------------------------------
 
-// TODO
+export const APP_ALL = gql(`
+    fragment AppAll on AndroidAppType {
+        absoluteStorePath
+        androidManifestDict
+        fileSizeBytes
+        filename
+        id
+        indexedDate
+        md5
+        originalFilename
+        packagename
+        partitionName
+        pk
+        relativeFirmwarePath
+        relativeStorePath
+        sha1
+        sha256
+    }
+`);
+
+export const GET_APPS_BY_OBJECT_IDS = gql(`
+    query GetAppsByObjectIds($objectIds: [String!]) {
+        android_firmware_connection(objectIdList: $objectIds) {
+            edges {
+                node {
+                    androidAppIdList {
+                        edges {
+                            node {
+                                ...AppAll
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
 
 // ----------------------------------------------------------------------------------------------------
 // GET APPS FOR SCANNER PAGE
