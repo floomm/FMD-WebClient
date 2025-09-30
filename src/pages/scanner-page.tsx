@@ -19,7 +19,7 @@ import {
     APP_ROW_SCANNER_PAGE,
     GET_APPS_SCANNER_PAGE
 } from "@/components/graphql/app.graphql.ts";
-import {buildSelectEntityColumn} from "@/components/ui/firmware-action-columns.tsx";
+import {buildSelectEntityColumn} from "@/components/ui/entity-action-columns.tsx";
 import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 
 export function ScannerPage() {

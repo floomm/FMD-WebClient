@@ -6,7 +6,7 @@ import {LoaderCircle, LoaderCircleIcon, Trash, TrashIcon, ViewIcon} from "lucide
 import {useLazyQuery, useMutation} from "@apollo/client";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {Exact, GetRqJobListQuery, Scalars} from "@/__generated__/graphql.ts";
 import {TypedDocumentNode} from "@graphql-typed-document-node/core";
@@ -176,7 +176,7 @@ function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
 
 function buildViewEntityColumn<T extends WithId>(
     tooltip: string,
-    path: "/firmwares" | "/apps",
+    basePath: string,
 ): ColumnDef<T> {
     return (
         {
@@ -184,6 +184,8 @@ function buildViewEntityColumn<T extends WithId>(
             cell: ({row}) => {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 const navigate = useNavigate();
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const {firmwareId} = useParams<{ firmwareId?: string }>();
                 const rowOriginalId = row.original.id;
 
                 return (
@@ -191,7 +193,13 @@ function buildViewEntityColumn<T extends WithId>(
                         <TooltipTrigger asChild>
                             <Button
                                 variant="outline"
-                                onClick={() => navigate(`${path}/${rowOriginalId}`)}
+                                onClick={() => {
+                                    if (basePath === "/apps" && firmwareId) {
+                                        void navigate(`/firmwares/${firmwareId}${basePath}/${rowOriginalId}`);
+                                    } else {
+                                        void navigate(`${basePath}/${rowOriginalId}`);
+                                    }
+                                }}
                             >
                                 <ViewIcon/>
                             </Button>

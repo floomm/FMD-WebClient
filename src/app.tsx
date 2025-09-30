@@ -25,6 +25,8 @@ function App() {
                 <Route path="/emulator" element={<EmulatorPage/>}/>
                 <Route path="/firmwares" element={<FirmwaresPage/>}/>
                 <Route path="/firmwares/:firmwareId" element={<FirmwarePage/>}/>
+                <Route path="/firmwares/:firmwareId/apps" element={<AppsPage/>}/>
+                <Route path="/firmwares/:firmwareId/apps/:appId" element={<AppPage/>}/>
                 <Route path="/apps" element={<AppsPage/>}/>
                 <Route path="/apps/:appId" element={<AppPage/>}/>
                 <Route path="*" element={<Navigate to="/" replace/>}/>

@@ -1,17 +1,19 @@
 import {BasePage} from "@/pages/base-page.tsx";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {useQuery} from "@apollo/client";
 import {FIRMWARE_ALL, GET_FIRMWARES_BY_OBJECT_IDS} from "@/components/graphql/firmware.graphql.ts";
 import {FirmwareAllFragment} from "@/__generated__/graphql.ts";
 import {useFragment} from "@/__generated__";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
-import {AlertCircleIcon} from "lucide-react";
+import {AlertCircleIcon, FileIcon, SquareIcon} from "lucide-react";
 import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
+import {Button} from "@/components/ui/button.tsx";
 
 export function FirmwarePage() {
     const {firmwareId} = useParams<{ firmwareId: string }>();
+    const navigate = useNavigate();
 
     const {
         loading: firmwaresLoading,
@@ -50,6 +52,21 @@ export function FirmwarePage() {
 
         return (
             <BasePage title="Firmware">
+                <div className="w-full flex gap-4 flex-wrap">
+                    <Button
+                        size="sm"
+                        onClick={() => {
+                            void navigate(`/firmwares/${firmwareId}/apps`);
+                        }}
+                    >
+                        <SquareIcon/> Apps
+                    </Button>
+                    <Button
+                        size="sm"
+                    >
+                        <FileIcon/> Files
+                    </Button>
+                </div>
                 <EntityTable entity={firmware}/>
             </BasePage>
         );

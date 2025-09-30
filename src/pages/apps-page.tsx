@@ -2,11 +2,12 @@ import {ColumnDef} from "@tanstack/react-table";
 import {AppAllFragment} from "@/__generated__/graphql.ts";
 import {useQuery} from "@apollo/client";
 import {useFragment} from "@/__generated__";
-import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
+import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {BasePage} from "@/pages/base-page.tsx";
 import {StateHandlingScrollableDataTable} from "@/components/ui/table/data-table.tsx";
 import {APP_ALL, GET_APPS_BY_FIRMWARE_OBJECT_IDS} from "@/components/graphql/app.graphql.ts";
-import {buildAppActionColumns} from "@/components/ui/firmware-action-columns.tsx";
+import {buildAppActionColumns} from "@/components/ui/entity-action-columns.tsx";
+import {useParams} from "react-router";
 
 const columns: ColumnDef<AppAllFragment>[] = [
     ...buildAppActionColumns<AppAllFragment>(),
@@ -73,11 +74,20 @@ const columns: ColumnDef<AppAllFragment>[] = [
 ];
 
 export function AppsPage() {
+    const {firmwareId} = useParams<{ firmwareId?: string }>();
+
+    let objectId: string | undefined;
+    if (firmwareId) {
+        objectId = convertIdToObjectId(firmwareId);
+    }
+
     const {
         loading: appsLoading,
         error: appsError,
         data: appsData,
-    } = useQuery(GET_APPS_BY_FIRMWARE_OBJECT_IDS);
+    } = useQuery(GET_APPS_BY_FIRMWARE_OBJECT_IDS, {
+        variables: {objectIds: objectId}
+    });
 
     const apps = (appsData?.android_firmware_connection?.edges ?? [])
         .flatMap(firmwareEdge => (firmwareEdge?.node?.androidAppIdList?.edges ?? []))

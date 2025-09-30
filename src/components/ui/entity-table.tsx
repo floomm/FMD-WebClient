@@ -17,10 +17,10 @@ export function EntityTable(
                         <TableCell className="font-medium">{key}</TableCell>
                         <TableCell className="text-muted-foreground whitespace-pre-wrap">
                             {(() => {
-                                let displayValue = String(value);
+                                let displayValue = value;
 
                                 try {
-                                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-argument
+                                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                     const parsed = JSON.parse(value);
                                     displayValue = JSON.stringify(parsed, null, 2);
                                 } catch {
