@@ -36,7 +36,6 @@ export function ScannersTable(
             columns={columns}
             data={scanners}
             onRowSelectionChange={(selectedRows: Scanner[]) => {
-                console.log(selectedRows);
                 setSelectedScanners(selectedRows);
             }}
         />

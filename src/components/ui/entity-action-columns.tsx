@@ -273,10 +273,10 @@ function buildDeleteEntityColumn<T extends WithId, U extends WithTypenameMutatio
 
 function ScanApkButton(
     {
-        id,
+        ids,
         tooltip,
     }: Readonly<{
-        id: string;
+        ids: string[];
         tooltip: string;
     }>,
 ) {
@@ -288,7 +288,7 @@ function ScanApkButton(
             <DialogTrigger>
                 <Tooltip delayDuration={500}>
                     <TooltipTrigger asChild>
-                        <ActionButton variant="outline">
+                        <ActionButton variant="outline" disabled={ids.length <= 0}>
                             <ScanSearchIcon className="size-5"/>
                         </ActionButton>
                     </TooltipTrigger>
@@ -304,10 +304,9 @@ function ScanApkButton(
                 <ScannersTable setSelectedScanners={setSelectedScanners}/>
                 <DialogFooter>
                     <Button onClick={() => {
-                        console.log(selectedScanners);
                         selectedScanners.forEach((scanner) => void scanApk({
                             variables: {
-                                objectIds: convertIdToObjectId(id),
+                                objectIds: ids.map(id => convertIdToObjectId(id)),
                                 scannerName: scanner.id
                             }
                         }));
@@ -322,10 +321,15 @@ function buildScanApkColumn<T extends WithId>(): ColumnDef<T> {
     return (
         {
             id: "scan",
+            header: ({table}) =>
+                <ScanApkButton
+                    ids={table.getSelectedRowModel().flatRows.map(row => row.original.id)}
+                    tooltip="Scan selected apps"
+                />,
             cell: ({row}) =>
                 <ScanApkButton
-                    id={row.original.id}
-                    tooltip="Scan App"
+                    ids={[row.original.id]}
+                    tooltip="Scan app"
                 />,
         }
     );
