@@ -1,8 +1,8 @@
-import type {ColumnDef, Table} from "@tanstack/react-table";
+import type {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 import {Button, buttonVariants} from "@/components/ui/button.tsx";
-import {EyeIcon, LoaderCircle, LoaderCircleIcon, ScanSearchIcon, TrashIcon} from "lucide-react";
+import {EyeIcon, LoaderCircleIcon, ScanSearchIcon, TrashIcon} from "lucide-react";
 import {useLazyQuery, useMutation} from "@apollo/client";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
@@ -74,22 +74,22 @@ function ActionButton(
     );
 }
 
-function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
+function DeleteEntityButton<T extends WithTypenameMutation>(
     {
+        ids,
         tooltip,
-        table,
         deleteMutation,
     }: Readonly<{
+        ids: string[];
         tooltip: string;
-        table: Table<T>;
-        deleteMutation: TypedDocumentNode<U, Exact<{
+        deleteMutation: TypedDocumentNode<T, Exact<{
             objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         }>>;
     }>,
 ) {
-    const selectedObjectIds = table.getSelectedRowModel().rows.map((row) => convertIdToObjectId(row.original.id));
+    const objectIds = ids.map(id => convertIdToObjectId(id));
     const [deleteEntities] = useMutation(deleteMutation, {
-        variables: {objectIds: selectedObjectIds},
+        variables: {objectIds: objectIds},
     });
 
     const [getRqJobList, {data: rqJobListData}] = useLazyQuery(GET_RQ_JOB_LIST, {
@@ -97,20 +97,20 @@ function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
         pollInterval: 5000,
     });
 
-    if (isDeletionOngoing(selectedObjectIds, rqJobListData)) {
+    if (isDeletionOngoing(objectIds, rqJobListData)) {
         return (
-            <LoaderCircleIcon className="animate-spin"></LoaderCircleIcon>
+            <div className="flex items-center justify-center">
+                <LoaderCircleIcon className="animate-spin"></LoaderCircleIcon>
+            </div>
         );
     }
-
-    const disabled = selectedObjectIds.length === 0;
 
     return (
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
                 <ActionButton
                     variant="destructive"
-                    disabled={disabled}
+                    disabled={objectIds.length <= 0}
                     onClick={() => {
                         void deleteEntities();
                         void getRqJobList();
@@ -124,62 +124,6 @@ function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
             </TooltipContent>
         </Tooltip>
     )
-}
-
-function DeleteEntityButton<T extends WithTypenameMutation>(
-    {
-        tooltip,
-        id,
-        deleteMutation,
-    }: Readonly<{
-        tooltip: string;
-        id: string;
-        deleteMutation: TypedDocumentNode<T, Exact<{
-            objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
-        }>>;
-    }>,
-) {
-    const objectId = convertIdToObjectId(id);
-    const [deleteEntity] = useMutation(
-        deleteMutation, {
-            variables: {
-                objectIds: objectId,
-            }
-        }
-    );
-
-    const [getRqJobList, {data: rqJobListData}] = useLazyQuery(GET_RQ_JOB_LIST, {
-        fetchPolicy: "cache-and-network",
-        pollInterval: 5000,
-    });
-
-    if (isDeletionOngoing([objectId], rqJobListData)) {
-        return (
-            <div className="flex items-center justify-center">
-                <LoaderCircle className="animate-spin"></LoaderCircle>
-            </div>
-        );
-    }
-
-    return (
-        <Tooltip delayDuration={500}>
-            <TooltipTrigger asChild>
-                <ActionButton
-                    variant="destructive"
-                    onClick={() => {
-                        void deleteEntity();
-                        void getRqJobList();
-                    }}
-                >
-                    <TrashIcon/>
-                </ActionButton>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>{tooltip}</p>
-            </TooltipContent>
-        </Tooltip>
-    )
-        ;
 }
 
 function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
@@ -263,10 +207,18 @@ function buildDeleteEntityColumn<T extends WithId, U extends WithTypenameMutatio
     return (
         {
             id: "delete",
-            header: ({table}) => <DeleteSelectedButton<T, U> tooltip={tooltipSelected} table={table}
-                                                             deleteMutation={deleteMutation}/>,
-            cell: ({row}) => <DeleteEntityButton tooltip={tooltipSingle} id={row.original.id}
-                                                 deleteMutation={deleteMutation}/>,
+            header: ({table}) =>
+                <DeleteEntityButton<U>
+                    ids={table.getSelectedRowModel().flatRows.map(row => row.original.id)}
+                    tooltip={tooltipSelected}
+                    deleteMutation={deleteMutation}
+                />,
+            cell: ({row}) =>
+                <DeleteEntityButton
+                    ids={[row.original.id]}
+                    tooltip={tooltipSingle}
+                    deleteMutation={deleteMutation}
+                />
         }
     );
 }
