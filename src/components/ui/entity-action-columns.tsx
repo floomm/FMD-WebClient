@@ -8,7 +8,13 @@ import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphq
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {useNavigate, useParams} from "react-router";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
-import {Exact, GetRqJobListQuery, Scalars} from "@/__generated__/graphql.ts";
+import {
+    Exact,
+    GetRqJobListQuery,
+    Scalars,
+    ScanApksByFirmwareObjectIdsMutation,
+    ScanApksByObjectIdsMutation
+} from "@/__generated__/graphql.ts";
 import {TypedDocumentNode} from "@graphql-typed-document-node/core";
 import {
     Dialog,
@@ -22,7 +28,6 @@ import * as React from "react";
 import type {VariantProps} from "class-variance-authority";
 import {cn} from "@/lib/utils.ts";
 import {Scanner, ScannersTable} from "@/components/ui/scanners-table.tsx";
-import {SCAN_APKS_BY_OBJECT_IDS} from "@/components/graphql/app.graphql.ts";
 import {useState} from "react";
 
 type WithId = { id: string };
@@ -223,17 +228,22 @@ function buildDeleteEntityColumn<T extends WithId, U extends WithTypenameMutatio
     );
 }
 
-function ScanApkButton(
+function ScanAppButton(
     {
         ids,
         tooltip,
+        mutation,
     }: Readonly<{
         ids: string[];
         tooltip: string;
-    }>,
+        mutation: TypedDocumentNode<ScanApksByObjectIdsMutation | ScanApksByFirmwareObjectIdsMutation, Exact<{
+            objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+            scannerName: Scalars["String"]["input"]
+        }>>;
+    }>
 ) {
     const [selectedScanners, setSelectedScanners] = useState<Scanner[]>([]);
-    const [scanApk] = useMutation(SCAN_APKS_BY_OBJECT_IDS);
+    const [scanApk] = useMutation(mutation);
 
     return (
         <Dialog modal={true}>
@@ -259,7 +269,7 @@ function ScanApkButton(
                         selectedScanners.forEach((scanner) => void scanApk({
                             variables: {
                                 objectIds: ids.map(id => convertIdToObjectId(id)),
-                                scannerName: scanner.id
+                                scannerName: scanner.id,
                             }
                         }));
                     }}>Start Scan</Button>
@@ -269,37 +279,57 @@ function ScanApkButton(
     );
 }
 
-function buildScanApkColumn<T extends WithId>(): ColumnDef<T> {
+function buildScanAppColumn<T extends WithId>(
+    tooltipSingle: string,
+    tooltipSelected: string,
+    mutation: TypedDocumentNode<ScanApksByObjectIdsMutation | ScanApksByFirmwareObjectIdsMutation, Exact<{
+        objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+        scannerName: Scalars["String"]["input"]
+    }>>,
+): ColumnDef<T> {
     return (
         {
             id: "scan",
             header: ({table}) =>
-                <ScanApkButton
+                <ScanAppButton
                     ids={table.getSelectedRowModel().flatRows.map(row => row.original.id)}
-                    tooltip="Scan selected apps"
+                    tooltip={tooltipSelected}
+                    mutation={mutation}
                 />,
             cell: ({row}) =>
-                <ScanApkButton
+                <ScanAppButton
                     ids={[row.original.id]}
-                    tooltip="Scan app"
+                    tooltip={tooltipSingle}
+                    mutation={mutation}
                 />,
         }
     );
 }
 
-function buildFirmwareActionColumns<T extends WithId>(): ColumnDef<T>[] {
+function buildFirmwareActionColumns<T extends WithId>(
+    mutation: TypedDocumentNode<ScanApksByFirmwareObjectIdsMutation, Exact<{
+        objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+        scannerName: Scalars["String"]["input"]
+    }>>,
+): ColumnDef<T>[] {
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View firmware", "/firmwares"),
+        buildScanAppColumn("Scan all apps of this firmware", "Scan all apps of selected firmwares", mutation),
         buildDeleteEntityColumn("Delete firmware", "Delete selected firmwares", DELETE_FIRMWARE_BY_OBJECT_ID),
     ];
 }
 
-function buildAppActionColumns<T extends WithId>(): ColumnDef<T>[] {
+function buildAppActionColumns<T extends WithId>(
+    mutation: TypedDocumentNode<ScanApksByObjectIdsMutation, Exact<{
+        objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
+        scannerName: Scalars["String"]["input"]
+    }>>,
+): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View app", "/apps"),
-        buildScanApkColumn(),
+        buildScanAppColumn("Scan app", "Scan selected apps", mutation),
     ];
 }
 
