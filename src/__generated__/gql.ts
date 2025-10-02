@@ -21,7 +21,8 @@ type Documents = {
     "\n    query GetAppsById($id: ID!) {\n        android_firmware_connection {\n            edges {\n                node {\n                    androidAppIdList(id: $id) {\n                        edges {\n                            node {\n                                ...AppAll\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetAppsByIdDocument,
     "\n    fragment AppRowScannerPage on AndroidAppType {\n        id\n    }\n": typeof types.AppRowScannerPageFragmentDoc,
     "\n    query GetAppsScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    androidAppIdList {\n                        edges {\n                            node {\n                                ...AppRowScannerPage\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetAppsScannerPageDocument,
-    "\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.CreateApkScanJobDocument,
+    "\n    query GetScannerModuleNames {\n        scanner_module_name_list\n    }\n": typeof types.GetScannerModuleNamesDocument,
+    "\n    mutation ScanApksByObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            objectIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.ScanApksByObjectIdsDocument,
     "\n    query GetAuthToken($password: String!, $username: String!) {\n        tokenAuth(password: $password, username: $username) {\n            token\n        }\n    }\n": typeof types.GetAuthTokenDocument,
     "\n    mutation DeleteTokenCookie {\n        deleteTokenCookie {\n            deleted\n        }\n    }\n": typeof types.DeleteTokenCookieDocument,
     "\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n": typeof types.GetCurrentUserIdDocument,
@@ -33,6 +34,7 @@ type Documents = {
     "\n    query GetFirmwaresImporterPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowImporterPage\n                }\n            }\n        }\n    }\n": typeof types.GetFirmwaresImporterPageDocument,
     "\n    fragment FirmwareRowScannerPage on AndroidFirmwareType {\n        id\n        originalFilename\n    }\n": typeof types.FirmwareRowScannerPageFragmentDoc,
     "\n    query GetFirmwaresScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowScannerPage\n                }\n            }\n        }\n    }\n": typeof types.GetFirmwaresScannerPageDocument,
+    "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": typeof types.DeleteFirmwareByObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": typeof types.GetRqJobListDocument,
 };
@@ -44,7 +46,8 @@ const documents: Documents = {
     "\n    query GetAppsById($id: ID!) {\n        android_firmware_connection {\n            edges {\n                node {\n                    androidAppIdList(id: $id) {\n                        edges {\n                            node {\n                                ...AppAll\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n": types.GetAppsByIdDocument,
     "\n    fragment AppRowScannerPage on AndroidAppType {\n        id\n    }\n": types.AppRowScannerPageFragmentDoc,
     "\n    query GetAppsScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    androidAppIdList {\n                        edges {\n                            node {\n                                ...AppRowScannerPage\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n": types.GetAppsScannerPageDocument,
-    "\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n": types.CreateApkScanJobDocument,
+    "\n    query GetScannerModuleNames {\n        scanner_module_name_list\n    }\n": types.GetScannerModuleNamesDocument,
+    "\n    mutation ScanApksByObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            objectIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": types.ScanApksByObjectIdsDocument,
     "\n    query GetAuthToken($password: String!, $username: String!) {\n        tokenAuth(password: $password, username: $username) {\n            token\n        }\n    }\n": types.GetAuthTokenDocument,
     "\n    mutation DeleteTokenCookie {\n        deleteTokenCookie {\n            deleted\n        }\n    }\n": types.DeleteTokenCookieDocument,
     "\n    query GetCurrentUserId {\n        me {\n            id\n        }\n    }\n": types.GetCurrentUserIdDocument,
@@ -56,6 +59,7 @@ const documents: Documents = {
     "\n    query GetFirmwaresImporterPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowImporterPage\n                }\n            }\n        }\n    }\n": types.GetFirmwaresImporterPageDocument,
     "\n    fragment FirmwareRowScannerPage on AndroidFirmwareType {\n        id\n        originalFilename\n    }\n": types.FirmwareRowScannerPageFragmentDoc,
     "\n    query GetFirmwaresScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowScannerPage\n                }\n            }\n        }\n    }\n": types.GetFirmwaresScannerPageDocument,
+    "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": types.DeleteFirmwareByObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": types.GetRqJobListDocument,
 };
@@ -105,7 +109,11 @@ export function gql(source: "\n    query GetAppsScannerPage {\n        android_f
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n"): (typeof documents)["\n    mutation CreateApkScanJob($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            moduleName: $scannerName\n            objectIdList: $objectIds\n            queueName: \"high-python\"\n        ) {\n            jobIdList\n        }\n    }\n"];
+export function gql(source: "\n    query GetScannerModuleNames {\n        scanner_module_name_list\n    }\n"): (typeof documents)["\n    query GetScannerModuleNames {\n        scanner_module_name_list\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation ScanApksByObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            objectIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n"): (typeof documents)["\n    mutation ScanApksByObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            objectIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -150,6 +158,10 @@ export function gql(source: "\n    fragment FirmwareRowScannerPage on AndroidFir
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    query GetFirmwaresScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowScannerPage\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetFirmwaresScannerPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowScannerPage\n                }\n            }\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n"): (typeof documents)["\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

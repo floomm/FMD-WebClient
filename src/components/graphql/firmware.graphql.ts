@@ -105,6 +105,22 @@ export const GET_FIRMWARES_SCANNER_PAGE = gql(`
 `);
 
 // ----------------------------------------------------------------------------------------------------
+// SCAN ALL APKs OF FIRMWARES
+// ----------------------------------------------------------------------------------------------------
+
+export const SCAN_APKS_BY_FIRMWARE_OBJECT_IDS = gql(`
+    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {
+        createApkScanJob(
+            firmwareIdList: $objectIds,
+            moduleName: $scannerName,
+            queueName: "default-python",
+        ) {
+            jobIdList
+        }
+    }
+`);
+
+// ----------------------------------------------------------------------------------------------------
 // DELETE FIRMWARES
 // ----------------------------------------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
 import type {ColumnDef, Table} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {Button} from "@/components/ui/button.tsx";
-import {LoaderCircle, LoaderCircleIcon, Trash, TrashIcon, ViewIcon} from "lucide-react";
+import {Button, buttonVariants} from "@/components/ui/button.tsx";
+import {EyeIcon, LoaderCircle, LoaderCircleIcon, ScanSearchIcon, TrashIcon} from "lucide-react";
 import {useLazyQuery, useMutation} from "@apollo/client";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
@@ -10,6 +10,20 @@ import {useNavigate, useParams} from "react-router";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {Exact, GetRqJobListQuery, Scalars} from "@/__generated__/graphql.ts";
 import {TypedDocumentNode} from "@graphql-typed-document-node/core";
+import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
+import * as React from "react";
+import type {VariantProps} from "class-variance-authority";
+import {cn} from "@/lib/utils.ts";
+import {Scanner, ScannersTable} from "@/components/ui/scanners-table.tsx";
+import {SCAN_APKS_BY_OBJECT_IDS} from "@/components/graphql/app.graphql.ts";
+import {useState} from "react";
 
 type WithId = { id: string };
 type WithTypenameMutation = { __typename?: "Mutation" };
@@ -38,6 +52,26 @@ function isDeletionOngoing(objectIds: string[], rqJobListData: GetRqJobListQuery
         });
 
     return (ongoingDeletionJobs?.length ?? 0) > 0;
+}
+
+function ActionButton(
+    {
+        className,
+        variant,
+        asChild = false,
+        ...props
+    }: React.ComponentProps<"button"> &
+        VariantProps<typeof buttonVariants> & {
+        asChild?: boolean
+    }) {
+    return (
+        <Button
+            className={cn(className, "p-0 has-[>svg]:p-0 w-9")}
+            variant={variant}
+            asChild={asChild}
+            {...props}
+        ></Button>
+    );
 }
 
 function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
@@ -74,15 +108,16 @@ function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
     return (
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
-                <Button variant="destructive"
-                        disabled={disabled}
-                        onClick={() => {
-                            void deleteEntities();
-                            void getRqJobList();
-                        }}
+                <ActionButton
+                    variant="destructive"
+                    disabled={disabled}
+                    onClick={() => {
+                        void deleteEntities();
+                        void getRqJobList();
+                    }}
                 >
                     <TrashIcon/>
-                </Button>
+                </ActionButton>
             </TooltipTrigger>
             <TooltipContent>
                 <p>{tooltip}</p>
@@ -91,7 +126,7 @@ function DeleteSelectedButton<T extends WithId, U extends WithTypenameMutation>(
     )
 }
 
-function DeleteRowButton<T extends WithTypenameMutation>(
+function DeleteEntityButton<T extends WithTypenameMutation>(
     {
         tooltip,
         id,
@@ -129,18 +164,22 @@ function DeleteRowButton<T extends WithTypenameMutation>(
     return (
         <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
-                <Button variant="destructive" onClick={() => {
-                    void deleteEntity();
-                    void getRqJobList();
-                }}>
-                    <Trash></Trash>
-                </Button>
+                <ActionButton
+                    variant="destructive"
+                    onClick={() => {
+                        void deleteEntity();
+                        void getRqJobList();
+                    }}
+                >
+                    <TrashIcon/>
+                </ActionButton>
             </TooltipTrigger>
             <TooltipContent>
                 <p>{tooltip}</p>
             </TooltipContent>
         </Tooltip>
-    );
+    )
+        ;
 }
 
 function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
@@ -191,7 +230,7 @@ function buildViewEntityColumn<T extends WithId>(
                 return (
                     <Tooltip delayDuration={500}>
                         <TooltipTrigger asChild>
-                            <Button
+                            <ActionButton
                                 variant="outline"
                                 onClick={() => {
                                     if (basePath === "/apps" && firmwareId) {
@@ -201,8 +240,8 @@ function buildViewEntityColumn<T extends WithId>(
                                     }
                                 }}
                             >
-                                <ViewIcon/>
-                            </Button>
+                                <EyeIcon className="size-5"/>
+                            </ActionButton>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>{tooltip}</p>
@@ -226,8 +265,68 @@ function buildDeleteEntityColumn<T extends WithId, U extends WithTypenameMutatio
             id: "delete",
             header: ({table}) => <DeleteSelectedButton<T, U> tooltip={tooltipSelected} table={table}
                                                              deleteMutation={deleteMutation}/>,
-            cell: ({row}) => <DeleteRowButton tooltip={tooltipSingle} id={row.original.id}
-                                              deleteMutation={deleteMutation}/>,
+            cell: ({row}) => <DeleteEntityButton tooltip={tooltipSingle} id={row.original.id}
+                                                 deleteMutation={deleteMutation}/>,
+        }
+    );
+}
+
+function ScanApkButton(
+    {
+        id,
+        tooltip,
+    }: Readonly<{
+        id: string;
+        tooltip: string;
+    }>,
+) {
+    const [selectedScanners, setSelectedScanners] = useState<Scanner[]>([]);
+    const [scanApk] = useMutation(SCAN_APKS_BY_OBJECT_IDS);
+
+    return (
+        <Dialog modal={true}>
+            <DialogTrigger>
+                <Tooltip delayDuration={500}>
+                    <TooltipTrigger asChild>
+                        <ActionButton variant="outline">
+                            <ScanSearchIcon className="size-5"/>
+                        </ActionButton>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>{tooltip}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-5xl">
+                <DialogHeader>
+                    <DialogTitle>Select Scanner(s)</DialogTitle>
+                </DialogHeader>
+                <ScannersTable setSelectedScanners={setSelectedScanners}/>
+                <DialogFooter>
+                    <Button onClick={() => {
+                        console.log(selectedScanners);
+                        selectedScanners.forEach((scanner) => void scanApk({
+                            variables: {
+                                objectIds: convertIdToObjectId(id),
+                                scannerName: scanner.id
+                            }
+                        }));
+                    }}>Start Scan</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function buildScanApkColumn<T extends WithId>(): ColumnDef<T> {
+    return (
+        {
+            id: "scan",
+            cell: ({row}) =>
+                <ScanApkButton
+                    id={row.original.id}
+                    tooltip="Scan App"
+                />,
         }
     );
 }
@@ -244,6 +343,7 @@ function buildAppActionColumns<T extends WithId>(): ColumnDef<T>[] {
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View app", "/apps"),
+        buildScanApkColumn(),
     ];
 }
 
