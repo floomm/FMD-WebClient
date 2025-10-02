@@ -244,6 +244,7 @@ function ScanAppButton(
 ) {
     const [selectedScanners, setSelectedScanners] = useState<Scanner[]>([]);
     const [scanApk] = useMutation(mutation);
+    const navigate = useNavigate();
 
     return (
         <Dialog modal={true}>
@@ -265,14 +266,17 @@ function ScanAppButton(
                 </DialogHeader>
                 <ScannersTable setSelectedScanners={setSelectedScanners}/>
                 <DialogFooter>
-                    <Button onClick={() => {
-                        selectedScanners.forEach((scanner) => void scanApk({
-                            variables: {
-                                objectIds: ids.map(id => convertIdToObjectId(id)),
-                                scannerName: scanner.id,
-                            }
-                        }));
-                    }}>Start Scan</Button>
+                    <Button
+                        disabled={selectedScanners.length <= 0}
+                        onClick={() => {
+                            selectedScanners.forEach((scanner) => void scanApk({
+                                variables: {
+                                    objectIds: ids.map(id => convertIdToObjectId(id)),
+                                    scannerName: scanner.id,
+                                }
+                            }));
+                            void navigate("/scanner");
+                        }}>Start Scan</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

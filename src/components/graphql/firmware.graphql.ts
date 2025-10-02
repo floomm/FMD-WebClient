@@ -82,29 +82,6 @@ export const GET_FIRMWARES_IMPORTER_PAGE = gql(`
 `);
 
 // ----------------------------------------------------------------------------------------------------
-// GET FIRMWARES FOR SCANNER PAGE
-// ----------------------------------------------------------------------------------------------------
-
-export const FIRMWARE_ROW_SCANNER_PAGE = gql(`
-    fragment FirmwareRowScannerPage on AndroidFirmwareType {
-        id
-        originalFilename
-    }
-`);
-
-export const GET_FIRMWARES_SCANNER_PAGE = gql(`
-    query GetFirmwaresScannerPage {
-        android_firmware_connection {
-            edges {
-                node {
-                    ...FirmwareRowScannerPage
-                }
-            }
-        }
-    }
-`);
-
-// ----------------------------------------------------------------------------------------------------
 // SCAN ALL APKs OF FIRMWARES
 // ----------------------------------------------------------------------------------------------------
 
