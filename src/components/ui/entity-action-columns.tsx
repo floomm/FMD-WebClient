@@ -184,6 +184,8 @@ function buildViewEntityColumn<T extends WithId>(
                                 onClick={() => {
                                     if (basePath === "/apps" && firmwareId) {
                                         void navigate(`/firmwares/${firmwareId}${basePath}/${rowOriginalId}`);
+                                    } else if (basePath === "/files" && firmwareId) {
+                                        void navigate(`/firmwares/${firmwareId}${basePath}/${rowOriginalId}`);
                                     } else {
                                         void navigate(`${basePath}/${rowOriginalId}`);
                                     }
@@ -311,7 +313,7 @@ function buildScanAppColumn<T extends WithId>(
 }
 
 function buildFirmwareActionColumns<T extends WithId>(
-    mutation: TypedDocumentNode<ScanApksByFirmwareObjectIdsMutation, Exact<{
+    scanAppMutation: TypedDocumentNode<ScanApksByFirmwareObjectIdsMutation, Exact<{
         objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         scannerName: Scalars["String"]["input"]
     }>>,
@@ -319,13 +321,13 @@ function buildFirmwareActionColumns<T extends WithId>(
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View firmware", "/firmwares"),
-        buildScanAppColumn("Scan all apps of this firmware", "Scan all apps of selected firmwares", mutation),
+        buildScanAppColumn("Scan all apps of this firmware", "Scan all apps of selected firmwares", scanAppMutation),
         buildDeleteEntityColumn("Delete firmware", "Delete selected firmwares", DELETE_FIRMWARE_BY_OBJECT_ID),
     ];
 }
 
 function buildAppActionColumns<T extends WithId>(
-    mutation: TypedDocumentNode<ScanApksByObjectIdsMutation, Exact<{
+    scanAppMutation: TypedDocumentNode<ScanApksByObjectIdsMutation, Exact<{
         objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         scannerName: Scalars["String"]["input"]
     }>>,
@@ -333,7 +335,14 @@ function buildAppActionColumns<T extends WithId>(
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View app", "/apps"),
-        buildScanAppColumn("Scan app", "Scan selected apps", mutation),
+        buildScanAppColumn("Scan app", "Scan selected apps", scanAppMutation),
+    ];
+}
+
+function buildFileActionColumns<T extends WithId>(): ColumnDef<T> [] {
+    return [
+        buildSelectEntityColumn(),
+        buildViewEntityColumn("View file", "/files"),
     ];
 }
 
@@ -343,4 +352,5 @@ export {
     buildDeleteEntityColumn,
     buildFirmwareActionColumns,
     buildAppActionColumns,
+    buildFileActionColumns,
 }

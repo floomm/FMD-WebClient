@@ -63,6 +63,9 @@ export function FirmwarePage() {
                     </Button>
                     <Button
                         size="sm"
+                        onClick={() => {
+                            void navigate(`/firmwares/${firmwareId}/files`);
+                        }}
                     >
                         <FileIcon/> Files
                     </Button>

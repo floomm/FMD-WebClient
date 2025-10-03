@@ -62,7 +62,7 @@ export const GET_APPS_BY_FIRMWARE_OBJECT_IDS = gql(`
 `);
 
 export const GET_APP_BY_ID = gql(`
-    query GetAppsById($id: ID!) {
+    query GetAppById($id: ID!) {
         android_firmware_connection {
             edges {
                 node {
