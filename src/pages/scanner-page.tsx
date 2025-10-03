@@ -2,7 +2,6 @@ import {BasePage} from "@/pages/base-page.tsx";
 import {RqJobsTable} from "@/components/ui/rq-jobs-table.tsx";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
-import {Button} from "@/components/ui/button.tsx";
 import {useNavigate} from "react-router";
 
 export function ScannerPage() {
@@ -12,11 +11,11 @@ export function ScannerPage() {
         <BasePage title="Recent App Scan Jobs">
             <Alert className="flex items-center justify-center max-w-5xl">
                 <AlertCircleIcon/>
-                <AlertTitle className="flex items-center justify-center flex-wrap">
+                <AlertTitle className="flex flex-wrap items-center justify-center gap-1 text-center sm:text-left">
                     If you wish to start new scans, navigate to the
-                    <Button onClick={() => void navigate("/firmwares")} className="px-1 py-0" variant="link">Firmwares</Button>
+                    <a onClick={() => void navigate("/firmwares")} className="text-blue-600 hover:underline cursor-pointer">Firmwares</a>
                     or
-                    <Button onClick={() => void navigate("/apps")} className="px-1 py-0" variant="link">Apps</Button>
+                    <a onClick={() => void navigate("/apps")} className="text-blue-600 hover:underline cursor-pointer">Apps</a>
                     page.
                 </AlertTitle>
             </Alert>
