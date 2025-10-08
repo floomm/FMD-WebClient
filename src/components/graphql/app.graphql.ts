@@ -38,7 +38,9 @@ export const APP_ALL = gql(`
         sha256
         firmwareIdReference {
             id
-            originalFilename
+        }
+        firmwareFileReference {
+            id
         }
     }
 `);

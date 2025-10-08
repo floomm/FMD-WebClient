@@ -33,7 +33,6 @@ function App() {
                 <Route path="/firmwares/:firmwareId/files" element={<FilesPage/>}/>
                 <Route path="/firmwares/:firmwareId/files/:fileId" element={<FilePage/>}/>
                 <Route path="/apps" element={<AppsPage/>}/>
-                <Route path="/apps/:appId" element={<AppPage/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Route>
         </Routes>

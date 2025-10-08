@@ -15,6 +15,12 @@ export const FILE_ALL = gql(`
         parentDir
         partitionName
         relativePath
+        firmwareIdReference {
+            id
+        }
+        androidAppReference {
+            id
+        }
     }
 `);
 

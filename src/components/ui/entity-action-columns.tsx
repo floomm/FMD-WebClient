@@ -6,7 +6,7 @@ import {EyeIcon, LoaderCircleIcon, ScanSearchIcon, TrashIcon} from "lucide-react
 import {useLazyQuery, useMutation} from "@apollo/client";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
 import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
-import {useNavigate, useParams} from "react-router";
+import {useNavigate} from "react-router";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {
     Exact,
@@ -31,6 +31,13 @@ import {Scanner, ScannersTable} from "@/components/ui/scanners-table.tsx";
 import {useState} from "react";
 
 type WithId = { id: string };
+type WithIdAndFirmwareIdReference = {
+    id: string;
+    firmwareIdReference?: {
+        __typename?: "AndroidFirmwareType"
+        id: string
+    } | null;
+};
 type WithTypenameMutation = { __typename?: "Mutation" };
 
 const DELETION_JOB_FUNC_NAME = "api.v2.types.GenericDeletion.delete_queryset_background";
@@ -162,7 +169,7 @@ function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
     );
 }
 
-function buildViewEntityColumn<T extends WithId>(
+function buildViewEntityColumn<T extends WithIdAndFirmwareIdReference>(
     tooltip: string,
     basePath: string,
 ): ColumnDef<T> {
@@ -172,9 +179,8 @@ function buildViewEntityColumn<T extends WithId>(
             cell: ({row}) => {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 const navigate = useNavigate();
-                // eslint-disable-next-line react-hooks/rules-of-hooks
-                const {firmwareId} = useParams<{ firmwareId?: string }>();
-                const rowOriginalId = row.original.id;
+                const entityId = row.original.id;
+                const firmwareId = row.original.firmwareIdReference?.id;
 
                 return (
                     <Tooltip delayDuration={500}>
@@ -182,12 +188,10 @@ function buildViewEntityColumn<T extends WithId>(
                             <ActionButton
                                 variant="outline"
                                 onClick={() => {
-                                    if (basePath === "/apps" && firmwareId) {
-                                        void navigate(`/firmwares/${firmwareId}${basePath}/${rowOriginalId}`);
-                                    } else if (basePath === "/files" && firmwareId) {
-                                        void navigate(`/firmwares/${firmwareId}${basePath}/${rowOriginalId}`);
+                                    if (firmwareId) {
+                                        void navigate(`/firmwares/${firmwareId}${basePath}/${entityId}`);
                                     } else {
-                                        void navigate(`${basePath}/${rowOriginalId}`);
+                                        void navigate(`${basePath}/${entityId}`);
                                     }
                                 }}
                             >
@@ -326,7 +330,7 @@ function buildFirmwareActionColumns<T extends WithId>(
     ];
 }
 
-function buildAppActionColumns<T extends WithId>(
+function buildAppActionColumns<T extends WithIdAndFirmwareIdReference>(
     scanAppMutation: TypedDocumentNode<ScanApksByObjectIdsMutation, Exact<{
         objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         scannerName: Scalars["String"]["input"]
@@ -339,7 +343,7 @@ function buildAppActionColumns<T extends WithId>(
     ];
 }
 
-function buildFileActionColumns<T extends WithId>(): ColumnDef<T> [] {
+function buildFileActionColumns<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
         buildViewEntityColumn("View file", "/files"),

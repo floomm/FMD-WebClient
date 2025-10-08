@@ -1,17 +1,19 @@
 import {BasePage} from "@/pages/base-page.tsx";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {useQuery} from "@apollo/client";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
-import {AlertCircleIcon} from "lucide-react";
+import {AlertCircleIcon, FileIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {useFragment} from "@/__generated__";
 import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {FileAllFragment} from "@/__generated__/graphql.ts";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
 import {FILE_ALL, GET_FILE_BY_ID} from "@/components/graphql/file.graphql.ts";
+import {Button} from "@/components/ui/button.tsx";
 
 export function FilePage() {
     const {fileId} = useParams<{ fileId: string }>();
+    const navigate = useNavigate();
 
     const {
         loading: filesLoading,
@@ -50,7 +52,18 @@ export function FilePage() {
         const file: FileAllFragment = files[0];
 
         return (
-            <BasePage title="File">
+            <BasePage title={`File (${file.name})`}>
+                <div className="w-full flex gap-4 flex-wrap">
+                    <Button
+                        hidden={!file.firmwareIdReference?.id || !file.androidAppReference?.id}
+                        size="sm"
+                        onClick={() => {
+                            void navigate(`/firmwares/${file.firmwareIdReference?.id ?? ""}/apps/${file.androidAppReference?.id ?? ""}`);
+                        }}
+                    >
+                        <FileIcon/> App
+                    </Button>
+                </div>
                 <EntityTable entity={file}/>
             </BasePage>
         );

@@ -63,6 +63,10 @@ const columns: ColumnDef<FileAllFragment>[] = [
         accessorKey: "relativePath",
         header: "Relative Path",
     },
+    {
+        accessorKey: "firmwareIdReference.id",
+        header: "Firmware ID",
+    },
 ];
 
 export function FilesPage() {

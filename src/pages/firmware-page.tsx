@@ -5,7 +5,7 @@ import {FIRMWARE_ALL, GET_FIRMWARES_BY_OBJECT_IDS} from "@/components/graphql/fi
 import {FirmwareAllFragment} from "@/__generated__/graphql.ts";
 import {useFragment} from "@/__generated__";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
-import {AlertCircleIcon, FileIcon, SquareIcon} from "lucide-react";
+import {AlertCircleIcon, FilesIcon, SquareIcon} from "lucide-react";
 import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
@@ -67,7 +67,7 @@ export function FirmwarePage() {
                             void navigate(`/firmwares/${firmwareId}/files`);
                         }}
                     >
-                        <FileIcon/> Files
+                        <FilesIcon/> Files
                     </Button>
                 </div>
                 <EntityTable entity={firmware}/>

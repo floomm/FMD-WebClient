@@ -71,6 +71,10 @@ const columns: ColumnDef<AppAllFragment>[] = [
         accessorKey: "sha256",
         header: "SHA-256",
     },
+    {
+        accessorKey: "firmwareIdReference.id",
+        header: "Firmware ID",
+    },
 ];
 
 export function AppsPage() {
