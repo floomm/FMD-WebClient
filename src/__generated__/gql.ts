@@ -35,6 +35,8 @@ type Documents = {
     "\n    query GetFirmwaresImporterPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowImporterPage\n                }\n            }\n        }\n    }\n": typeof types.GetFirmwaresImporterPageDocument,
     "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": typeof types.DeleteFirmwareByObjectIdDocument,
+    "\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n": typeof types.ReportInfoWithAppReferenceFragmentDoc,
+    "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n": typeof types.GetAllReportsDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": typeof types.GetRqJobListDocument,
 };
 const documents: Documents = {
@@ -59,6 +61,8 @@ const documents: Documents = {
     "\n    query GetFirmwaresImporterPage {\n        android_firmware_connection {\n            edges {\n                node {\n                    ...FirmwareRowImporterPage\n                }\n            }\n        }\n    }\n": types.GetFirmwaresImporterPageDocument,
     "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": types.DeleteFirmwareByObjectIdDocument,
+    "\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n": types.ReportInfoWithAppReferenceFragmentDoc,
+    "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n": types.GetAllReportsDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": types.GetRqJobListDocument,
 };
 
@@ -160,6 +164,14 @@ export function gql(source: "\n    mutation ScanApksByFirmwareObjectIds($objectI
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n"): (typeof documents)["\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n"): (typeof documents)["\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n"): (typeof documents)["\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

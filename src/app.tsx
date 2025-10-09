@@ -13,6 +13,7 @@ import {AppPage} from "@/pages/app-page.tsx";
 import {FilePage} from "@/pages/file-page.tsx";
 import {FilesPage} from "@/pages/files-page.tsx";
 import {NotFoundPage} from "@/pages/not-found-page.tsx";
+import {ReportsPage} from "@/pages/reports-page.tsx";
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/firmwares/:firmwareId/files" element={<FilesPage/>}/>
                 <Route path="/firmwares/:firmwareId/files/:fileId" element={<FilePage/>}/>
                 <Route path="/apps" element={<AppsPage/>}/>
+                <Route path="/reports" element={<ReportsPage/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>
             </Route>
         </Routes>
