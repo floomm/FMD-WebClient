@@ -16,6 +16,7 @@ import {
     DeleteEntityButton,
     ScanAppActionButton
 } from "@/components/ui/table/action-columns/action-buttons.tsx";
+import {APPS_URL, FILES_URL, FIRMWARES_URL} from "@/components/ui/sidebar/app-sidebar.tsx";
 
 type WithId = { id: string };
 type WithIdAndFirmwareIdReference = {
@@ -58,9 +59,8 @@ function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
     );
 }
 
-function buildViewEntityColumn<T extends WithIdAndFirmwareIdReference>(
+function buildViewFirmwareColumn<T extends WithId>(
     tooltip: string,
-    basePath: string,
 ): ColumnDef<T> {
     return (
         {
@@ -68,21 +68,14 @@ function buildViewEntityColumn<T extends WithIdAndFirmwareIdReference>(
             cell: ({row}) => {
                 // eslint-disable-next-line react-hooks/rules-of-hooks
                 const navigate = useNavigate();
-                const entityId = row.original.id;
-                const firmwareId = row.original.firmwareIdReference?.id;
+                const firmwareId = row.original.id;
 
                 return (
                     <Tooltip delayDuration={500}>
                         <TooltipTrigger asChild>
                             <ActionButton
                                 variant="outline"
-                                onClick={() => {
-                                    if (firmwareId) {
-                                        void navigate(`/firmwares/${firmwareId}${basePath}/${entityId}`);
-                                    } else {
-                                        void navigate(`${basePath}/${entityId}`);
-                                    }
-                                }}
+                                onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}`)}
                             >
                                 <EyeIcon className="size-5"/>
                             </ActionButton>
@@ -91,6 +84,78 @@ function buildViewEntityColumn<T extends WithIdAndFirmwareIdReference>(
                             <p>{tooltip}</p>
                         </TooltipContent>
                     </Tooltip>
+                );
+            },
+        }
+    );
+}
+
+function buildViewAppColumn<T extends WithIdAndFirmwareIdReference>(
+    tooltip: string,
+): ColumnDef<T> {
+    return (
+        {
+            id: "view",
+            cell: ({row}) => {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const navigate = useNavigate();
+                const appId = row.original.id;
+                const firmwareId = row.original.firmwareIdReference?.id;
+
+                return (
+                    <>
+                        {firmwareId && (
+                            <Tooltip delayDuration={500}>
+                                <TooltipTrigger asChild>
+                                    <ActionButton
+                                        variant="outline"
+                                        onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}${APPS_URL}/${appId}`)}
+                                    >
+                                        <EyeIcon className="size-5"/>
+                                    </ActionButton>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{tooltip}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                    </>
+                );
+            },
+        }
+    );
+}
+
+function buildViewFileColumn<T extends WithIdAndFirmwareIdReference>(
+    tooltip: string,
+): ColumnDef<T> {
+    return (
+        {
+            id: "view",
+            cell: ({row}) => {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const navigate = useNavigate();
+                const fileId = row.original.id;
+                const firmwareId = row.original.firmwareIdReference?.id;
+
+                return (
+                    <>
+                        {firmwareId && (
+                            <Tooltip delayDuration={500}>
+                                <TooltipTrigger asChild>
+                                    <ActionButton
+                                        variant="outline"
+                                        onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}${FILES_URL}/${fileId}`)}
+                                    >
+                                        <EyeIcon className="size-5"/>
+                                    </ActionButton>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{tooltip}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                    </>
                 );
             },
         }
@@ -126,7 +191,7 @@ function buildDeleteEntityColumn<T extends WithId, U extends WithTypenameMutatio
 function buildScanAppColumn<T extends WithId>(
     tooltipSingle: string,
     tooltipSelected: string,
-    mutation: TypedDocumentNode<ScanApksByObjectIdsMutation | ScanApksByFirmwareObjectIdsMutation, Exact<{
+    scanMutation: TypedDocumentNode<ScanApksByObjectIdsMutation | ScanApksByFirmwareObjectIdsMutation, Exact<{
         objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         scannerName: Scalars["String"]["input"]
     }>>,
@@ -138,13 +203,13 @@ function buildScanAppColumn<T extends WithId>(
                 <ScanAppActionButton
                     ids={table.getSelectedRowModel().flatRows.map(row => row.original.id)}
                     tooltip={tooltipSelected}
-                    mutation={mutation}
+                    mutation={scanMutation}
                 />,
             cell: ({row}) =>
                 <ScanAppActionButton
                     ids={[row.original.id]}
                     tooltip={tooltipSingle}
-                    mutation={mutation}
+                    mutation={scanMutation}
                 />,
         }
     );
@@ -158,7 +223,7 @@ function buildFirmwareActionColumns<T extends WithId>(
 ): ColumnDef<T>[] {
     return [
         buildSelectEntityColumn(),
-        buildViewEntityColumn("View firmware", "/firmwares"),
+        buildViewFirmwareColumn("View firmware"),
         buildScanAppColumn("Scan all apps of this firmware", "Scan all apps of selected firmwares", scanAppMutation),
         buildDeleteEntityColumn("Delete firmware", "Delete selected firmwares", DELETE_FIRMWARE_BY_OBJECT_ID),
     ];
@@ -172,7 +237,7 @@ function buildAppActionColumns<T extends WithIdAndFirmwareIdReference>(
 ): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
-        buildViewEntityColumn("View app", "/apps"),
+        buildViewAppColumn("View app"),
         buildScanAppColumn("Scan app", "Scan selected apps", scanAppMutation),
     ];
 }
@@ -180,14 +245,12 @@ function buildAppActionColumns<T extends WithIdAndFirmwareIdReference>(
 function buildFileActionColumns<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
-        buildViewEntityColumn("View file", "/files"),
+        buildViewFileColumn("View file"),
     ];
 }
 
 export {
     buildSelectEntityColumn,
-    buildViewEntityColumn,
-    buildDeleteEntityColumn,
     buildFirmwareActionColumns,
     buildAppActionColumns,
     buildFileActionColumns,

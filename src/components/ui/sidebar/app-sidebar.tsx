@@ -29,6 +29,7 @@ export const SCAN_JOBS_URL = "/scan-jobs";
 export const EMULATOR_URL = "/emulator";
 export const FIRMWARES_URL = "/firmwares";
 export const APPS_URL = "/apps";
+export const FILES_URL = "/files";
 export const REPORTS_URL = "/reports";
 
 const data = {
