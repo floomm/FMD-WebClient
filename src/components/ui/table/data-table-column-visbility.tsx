@@ -46,7 +46,10 @@ export function DataTableViewOptions<TData>(
                                     column.toggleVisibility(value);
                                 }}
                             >
-                                {column.id}
+                                {typeof column.columnDef.header === "string"
+                                    ? (column.columnDef.header)
+                                    : (column.id)
+                                }
                             </DropdownMenuCheckboxItem>
                         )
                     })}

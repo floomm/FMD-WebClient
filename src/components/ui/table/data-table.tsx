@@ -15,21 +15,15 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table.tsx"
-import {Button} from "@/components/ui/button.tsx";
 import {useEffect, useRef, useState} from "react";
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu.tsx";
 import {DataTablePagination} from "@/components/ui/table/data-table-pagination.tsx";
 import {cn} from "@/lib/utils.ts";
-import {AlertCircleIcon, ChevronRightIcon} from "lucide-react";
+import {AlertCircleIcon} from "lucide-react";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {ApolloError} from "@apollo/client";
+import {DataTableViewOptions} from "@/components/ui/table/data-table-column-visbility.tsx";
 
 interface DataTableProps<TData, TValue> {
     className?: string;
@@ -49,7 +43,6 @@ function DataTable<TData, TValue>(
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
-    const [isColumnMenuOpen, setIsColumnMenuOpen] = useState(false);
 
     const table = useReactTable({
         data,
@@ -82,40 +75,7 @@ function DataTable<TData, TValue>(
     return (
         <div className={cn(className)}>
             <div className="flex items-center p-4">
-                <DropdownMenu open={isColumnMenuOpen} onOpenChange={setIsColumnMenuOpen}>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
-                            Columns
-                            <ChevronRightIcon
-                                className={`transition-transform ${isColumnMenuOpen ? "rotate-90" : "rotate-0"}`}
-                            />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter(
-                                (column) => column.getCanHide()
-                            )
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => {
-                                            column.toggleVisibility(value);
-                                        }}
-                                    >
-                                        {typeof column.columnDef.header === "string"
-                                            ? (column.columnDef.header)
-                                            : (column.id)
-                                        }
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <DataTableViewOptions table={table}/>
             </div>
             <div className="overflow-hidden rounded-xs border">
                 <Table>
