@@ -1,7 +1,7 @@
 import {gql} from "@/__generated__";
 
-export const REPORT_INFO_WITH_APP_REFERENCE = gql(`
-    fragment ReportInfoWithAppReference on ApkScannerReportType {
+export const REPORT_INFO = gql(`
+    fragment ReportInfo on ApkScannerReportType {
         id
         reportDate
         scannerName
@@ -19,7 +19,7 @@ export const REPORT_INFO_WITH_APP_REFERENCE = gql(`
 export const GET_REPORTS_BY_APP_OBJECT_ID = gql(`
     query GetReportsByAppObjectId($appObjectId: String) {
         apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {
-            ...ReportInfoWithAppReference
+            ...ReportInfo
         }
     }
 `);

@@ -1,16 +1,16 @@
 import {BasePage} from "@/pages/base-page.tsx";
 import {ColumnDef} from "@tanstack/react-table";
-import {ReportInfoWithAppReferenceFragment} from "@/__generated__/graphql.ts";
 import {StateHandlingScrollableDataTable} from "@/components/ui/table/data-table.tsx";
 import {useQuery} from "@apollo/client";
 import {useFragment} from "@/__generated__";
 import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
-import {GET_REPORTS_BY_APP_OBJECT_ID, REPORT_INFO_WITH_APP_REFERENCE} from "@/components/graphql/report.graphql.ts";
+import {GET_REPORTS_BY_APP_OBJECT_ID, REPORT_INFO} from "@/components/graphql/report.graphql.ts";
 import {useParams} from "react-router";
 import {buildViewReportColumn} from "@/components/ui/table/action-columns/report-action-columns.tsx";
+import {ReportInfoFragment} from "@/__generated__/graphql.ts";
 
-const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
-    buildViewReportColumn<ReportInfoWithAppReferenceFragment>(),
+const columns: ColumnDef<ReportInfoFragment>[] = [
+    buildViewReportColumn<ReportInfoFragment>(),
     {
         id: "id",
         accessorKey: "id",
@@ -58,7 +58,7 @@ export function ReportsPage() {
 
     const reports = (reportsData?.apk_scanner_report_list ?? [])
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        .map(report => useFragment(REPORT_INFO_WITH_APP_REFERENCE, report))
+        .map(report => useFragment(REPORT_INFO, report))
         .filter(isNonNullish);
 
     return (
