@@ -4,7 +4,7 @@ import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
 import {useNavigate} from "react-router";
 
-export function ScannerPage() {
+export function ScanJobsPage() {
     const navigate = useNavigate();
 
     return (

@@ -24,38 +24,45 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar.tsx";
 import {useQuery} from "@apollo/client";
 import {GET_CURRENT_USER_EMAIL_AND_USERNAME} from "@/components/graphql/current-user.graphql.ts";
 
+export const IMPORTER_URL = "/importer";
+export const SCAN_JOBS_URL = "/scan-jobs";
+export const EMULATOR_URL = "/emulator";
+export const FIRMWARES_URL = "/firmwares";
+export const APPS_URL = "/apps";
+export const REPORTS_URL = "/reports";
+
 const data = {
     operations: [
         {
             title: "Importer",
-            url: "/importer",
+            url: IMPORTER_URL,
             icon: ImportIcon,
         },
         {
-            title: "Scanner",
-            url: "/scanner",
+            title: "Scan Jobs",
+            url: SCAN_JOBS_URL,
             icon: ScanSearchIcon,
         },
         {
             title: "Emulator",
-            url: "/emulator",
+            url: EMULATOR_URL,
             icon: SmartphoneIcon,
         },
     ],
     analyses: [
         {
             name: "Firmwares",
-            url: "/firmwares",
+            url: FIRMWARES_URL,
             icon: CpuIcon,
         },
         {
             name: "Apps",
-            url: "/apps",
+            url: APPS_URL,
             icon: SquareIcon,
         },
         {
-            name: "Reports",
-            url: "/reports",
+            name: "Scan Reports",
+            url: REPORTS_URL,
             icon: BookOpenIcon,
         },
     ],
