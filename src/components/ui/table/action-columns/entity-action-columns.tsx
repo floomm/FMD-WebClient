@@ -1,21 +1,21 @@
 import type {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {EyeIcon, LoaderCircleIcon, TrashIcon} from "lucide-react";
-import {useLazyQuery, useMutation} from "@apollo/client";
+import {EyeIcon} from "lucide-react";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
-import {convertIdToObjectId} from "@/lib/graphql/graphql-utils.ts";
 import {useNavigate} from "react-router";
-import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {
     Exact,
-    GetRqJobListQuery,
     Scalars,
     ScanApksByFirmwareObjectIdsMutation,
     ScanApksByObjectIdsMutation
 } from "@/__generated__/graphql.ts";
 import {TypedDocumentNode} from "@graphql-typed-document-node/core";
-import {ActionButton, ScanAppActionButton} from "@/components/ui/table/action-columns/action-buttons.tsx";
+import {
+    ActionButton,
+    DeleteEntityButton,
+    ScanAppActionButton
+} from "@/components/ui/table/action-columns/action-buttons.tsx";
 
 type WithId = { id: string };
 type WithIdAndFirmwareIdReference = {
@@ -25,86 +25,7 @@ type WithIdAndFirmwareIdReference = {
         id: string
     } | null;
 };
-type WithTypenameMutation = { __typename?: "Mutation" };
-
-const DELETION_JOB_FUNC_NAME = "api.v2.types.GenericDeletion.delete_queryset_background";
-
-function isDeletionOngoing(objectIds: string[], rqJobListData: GetRqJobListQuery | undefined) {
-    const ongoingDeletionJobs = rqJobListData?.rq_job_list
-        ?.filter(job =>
-            job?.funcName === DELETION_JOB_FUNC_NAME &&
-            !job.isFinished &&
-            !job.isFailed
-        ).filter(job => {
-            if (!job?.description) return false;
-
-            /*
-            The job description contains the affected elements in the following format:
-            "api.v2.types.GenericDeletion.delete_queryset_background(['68d2c1f78773bc31564c1dab', '68d2c2008773bc31564c1dac'], <class 'model.AndroidFirmware.AndroidFirmware'>)",
-             */
-            const start = job.description.indexOf("['");
-            const end = job.description.indexOf("']");
-            const deletedObjectIdsSubstring = job.description.substring(start, end + 2);
-            // We parse the substring to a string array. But first, we need to replace both ' with ".
-            const deletedObjectIds = JSON.parse(deletedObjectIdsSubstring.replace(/'/g, '"')) as string[];
-            return objectIds.some((id) => deletedObjectIds.includes(id));
-        });
-
-    return (ongoingDeletionJobs?.length ?? 0) > 0;
-}
-
-
-function DeleteEntityButton<T extends WithTypenameMutation>(
-    {
-        ids,
-        tooltip,
-        deleteMutation,
-    }: Readonly<{
-        ids: string[];
-        tooltip: string;
-        deleteMutation: TypedDocumentNode<T, Exact<{
-            objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
-        }>>;
-    }>,
-) {
-    const objectIds = ids.map(id => convertIdToObjectId(id));
-    const [deleteEntities] = useMutation(deleteMutation, {
-        variables: {objectIds: objectIds},
-    });
-
-    const [getRqJobList, {data: rqJobListData}] = useLazyQuery(GET_RQ_JOB_LIST, {
-        fetchPolicy: "cache-and-network",
-        pollInterval: 5000,
-    });
-
-    if (isDeletionOngoing(objectIds, rqJobListData)) {
-        return (
-            <div className="flex items-center justify-center">
-                <LoaderCircleIcon className="animate-spin"></LoaderCircleIcon>
-            </div>
-        );
-    }
-
-    return (
-        <Tooltip delayDuration={500}>
-            <TooltipTrigger asChild>
-                <ActionButton
-                    variant="destructive"
-                    disabled={objectIds.length <= 0}
-                    onClick={() => {
-                        void deleteEntities();
-                        void getRqJobList();
-                    }}
-                >
-                    <TrashIcon/>
-                </ActionButton>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>{tooltip}</p>
-            </TooltipContent>
-        </Tooltip>
-    )
-}
+export type WithTypenameMutation = { __typename?: "Mutation" };
 
 function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
     return (
