@@ -12,60 +12,81 @@ import {buildFileActionColumns} from "@/components/ui/table/action-columns/entit
 const columns: ColumnDef<FileAllFragment>[] = [
     ...buildFileActionColumns<FileAllFragment>(),
     {
+        id: "id",
         accessorKey: "id",
         header: "ID",
+        meta: {hidden: true},
     },
     {
+        id: "name",
         accessorKey: "name",
         header: "Name",
     },
     {
+        id: "absoluteStorePath",
         accessorKey: "absoluteStorePath",
         header: "Absolute Store Path",
+        meta: {hidden: true},
     },
     // {
+    //     id: "fileSizeBytes",
     //     accessorKey: "fileSizeBytes",
     //     header: "File Size (Bytes)",
+    //     meta: {hidden: true},
     // },
     {
+        id: "indexedDate",
         accessorKey: "indexedDate",
         header: "Indexed Date",
     },
     {
+        id: "isDirectory",
         accessorKey: "isDirectory",
         header: "Is directory?",
     },
     {
+        id: "isOnDisk",
         accessorKey: "isOnDisk",
         header: "Is on disk?",
     },
     {
+        id: "isSymlink",
         accessorKey: "isSymlink",
         header: "Is symlink?",
     },
     {
+        id: "md5",
         accessorKey: "md5",
         header: "MD5",
+        meta: {hidden: true},
     },
     {
+        id: "metaDict",
         accessorKey: "metaDict",
         header: "Meta Dict",
+        meta: {hidden: true},
     },
     {
+        id: "parentDir",
         accessorKey: "parentDir",
         header: "Parent Directory",
     },
     {
+        id: "partitionName",
         accessorKey: "partitionName",
         header: "Partition Name",
     },
     {
+        id: "relativePath",
         accessorKey: "relativePath",
         header: "Relative Path",
+        meta: {hidden: true},
     },
     {
+        id: "firmwareIdReference.id",
         accessorKey: "firmwareIdReference.id",
         header: "Firmware ID",
+        meta: {hidden: true},
     },
 ];
 

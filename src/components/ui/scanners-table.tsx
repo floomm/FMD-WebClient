@@ -12,6 +12,7 @@ export type Scanner = {
 const columns: ColumnDef<Scanner>[] = [
     buildSelectEntityColumn<Scanner>(),
     {
+        id: "id",
         accessorKey: "id",
         header: "Module",
     },

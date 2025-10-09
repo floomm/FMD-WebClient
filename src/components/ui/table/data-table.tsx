@@ -25,6 +25,13 @@ import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert.tsx";
 import {ApolloError} from "@apollo/client";
 import {DataTableViewOptions} from "@/components/ui/table/data-table-column-visbility.tsx";
 
+declare module "@tanstack/table-core" {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    interface ColumnMeta<TData, TValue> {
+        hidden?: boolean;
+    }
+}
+
 interface DataTableProps<TData, TValue> {
     className?: string;
     columns: ColumnDef<TData, TValue>[];
@@ -41,7 +48,12 @@ function DataTable<TData, TValue>(
     }: Readonly<DataTableProps<TData, TValue>>
 ) {
     const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        Object.fromEntries(
+            columns.map(c => [c.id, !(c.meta?.hidden ?? false)])
+        )
+    );
     const [rowSelection, setRowSelection] = useState({});
 
     const table = useReactTable({

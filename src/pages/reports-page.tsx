@@ -9,22 +9,28 @@ import {GET_ALL_REPORTS, REPORT_INFO_WITH_APP_REFERENCE} from "@/components/grap
 
 const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
     {
+        id: "id",
         accessorKey: "id",
         header: "ID",
+        meta: {hidden: true},
     },
     {
+        id: "androidAppIdReference.filename",
         accessorKey: "androidAppIdReference.filename",
         header: "App Filename",
     },
     {
+        id: "scannerName",
         accessorKey: "scannerName",
         header: "Scanner Name",
     },
     {
+        id: "scannerVersion",
         accessorKey: "scannerVersion",
         header: "Scanner Version",
     },
     {
+        id: "reportDate",
         accessorKey: "reportDate",
         header: "Report Date",
     },
