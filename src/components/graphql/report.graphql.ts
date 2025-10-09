@@ -9,6 +9,9 @@ export const REPORT_INFO_WITH_APP_REFERENCE = gql(`
         androidAppIdReference {
             id
             filename
+            firmwareIdReference {
+                id
+            }
         }
     }
 `);

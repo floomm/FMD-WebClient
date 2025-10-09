@@ -7,18 +7,15 @@ import {useFragment} from "@/__generated__";
 import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {GET_REPORTS_BY_APP_OBJECT_ID, REPORT_INFO_WITH_APP_REFERENCE} from "@/components/graphql/report.graphql.ts";
 import {useParams} from "react-router";
+import {buildViewReportColumn} from "@/components/ui/table/action-columns/report-action-columns.tsx";
 
 const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
+    buildViewReportColumn<ReportInfoWithAppReferenceFragment>(),
     {
         id: "id",
         accessorKey: "id",
         header: "ID",
         meta: {hidden: true},
-    },
-    {
-        id: "androidAppIdReference.filename",
-        accessorKey: "androidAppIdReference.filename",
-        header: "App Filename",
     },
     {
         id: "scannerName",
@@ -34,6 +31,11 @@ const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
         id: "reportDate",
         accessorKey: "reportDate",
         header: "Report Date",
+    },
+    {
+        id: "androidAppIdReference.filename",
+        accessorKey: "androidAppIdReference.filename",
+        header: "App Filename",
     },
 ];
 
