@@ -1,7 +1,7 @@
 import type {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox.tsx";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip.tsx";
-import {EyeIcon} from "lucide-react";
+import {BookOpenIcon, EyeIcon} from "lucide-react";
 import {DELETE_FIRMWARE_BY_OBJECT_ID} from "@/components/graphql/firmware.graphql.ts";
 import {useNavigate} from "react-router";
 import {
@@ -59,9 +59,7 @@ function buildSelectEntityColumn<T extends WithId>(): ColumnDef<T> {
     );
 }
 
-function buildViewFirmwareColumn<T extends WithId>(
-    tooltip: string,
-): ColumnDef<T> {
+function buildViewFirmwareColumn<T extends WithId>(): ColumnDef<T> {
     return (
         {
             id: "view",
@@ -81,7 +79,7 @@ function buildViewFirmwareColumn<T extends WithId>(
                             </ActionButton>
                         </TooltipTrigger>
                         <TooltipContent>
-                            <p>{tooltip}</p>
+                            <p>View firmware</p>
                         </TooltipContent>
                     </Tooltip>
                 );
@@ -90,9 +88,7 @@ function buildViewFirmwareColumn<T extends WithId>(
     );
 }
 
-function buildViewAppColumn<T extends WithIdAndFirmwareIdReference>(
-    tooltip: string,
-): ColumnDef<T> {
+function buildViewAppColumn<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> {
     return (
         {
             id: "view",
@@ -115,7 +111,7 @@ function buildViewAppColumn<T extends WithIdAndFirmwareIdReference>(
                                     </ActionButton>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>{tooltip}</p>
+                                    <p>View app</p>
                                 </TooltipContent>
                             </Tooltip>
                         )}
@@ -126,9 +122,7 @@ function buildViewAppColumn<T extends WithIdAndFirmwareIdReference>(
     );
 }
 
-function buildViewFileColumn<T extends WithIdAndFirmwareIdReference>(
-    tooltip: string,
-): ColumnDef<T> {
+function buildViewFileColumn<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> {
     return (
         {
             id: "view",
@@ -151,13 +145,47 @@ function buildViewFileColumn<T extends WithIdAndFirmwareIdReference>(
                                     </ActionButton>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>{tooltip}</p>
+                                    <p>View file</p>
                                 </TooltipContent>
                             </Tooltip>
                         )}
                     </>
                 );
             },
+        }
+    );
+}
+
+function buildViewReportsColumn<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> {
+    return (
+        {
+            id: "view-reports",
+            cell: ({row}) => {
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                const navigate = useNavigate();
+                const appId = row.original.id;
+                const firmwareId = row.original.firmwareIdReference?.id;
+
+                return (
+                    <>
+                        {firmwareId && (
+                            <Tooltip delayDuration={500}>
+                                <TooltipTrigger asChild>
+                                    <ActionButton
+                                        variant="outline"
+                                        onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}${APPS_URL}/${appId}/reports`)}
+                                    >
+                                        <BookOpenIcon className="size-5"/>
+                                    </ActionButton>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>View reports</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
+                    </>
+                );
+            }
         }
     );
 }
@@ -223,7 +251,7 @@ function buildFirmwareActionColumns<T extends WithId>(
 ): ColumnDef<T>[] {
     return [
         buildSelectEntityColumn(),
-        buildViewFirmwareColumn("View firmware"),
+        buildViewFirmwareColumn(),
         buildScanAppColumn("Scan all apps of this firmware", "Scan all apps of selected firmwares", scanAppMutation),
         buildDeleteEntityColumn("Delete firmware", "Delete selected firmwares", DELETE_FIRMWARE_BY_OBJECT_ID),
     ];
@@ -237,7 +265,8 @@ function buildAppActionColumns<T extends WithIdAndFirmwareIdReference>(
 ): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
-        buildViewAppColumn("View app"),
+        buildViewAppColumn(),
+        buildViewReportsColumn(),
         buildScanAppColumn("Scan app", "Scan selected apps", scanAppMutation),
     ];
 }
@@ -245,7 +274,7 @@ function buildAppActionColumns<T extends WithIdAndFirmwareIdReference>(
 function buildFileActionColumns<T extends WithIdAndFirmwareIdReference>(): ColumnDef<T> [] {
     return [
         buildSelectEntityColumn(),
-        buildViewFileColumn("View file"),
+        buildViewFileColumn(),
     ];
 }
 
