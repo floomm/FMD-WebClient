@@ -17,7 +17,7 @@ import {ReportsPage} from "@/pages/reports-page.tsx";
 import {ReportPage} from "@/pages/report-page.tsx";
 import {
     APPS_URL,
-    EMULATOR_URL,
+    EMULATOR_URL, FILES_URL,
     FIRMWARES_URL,
     IMPORTER_URL,
     REPORTS_URL,
@@ -38,12 +38,12 @@ function App() {
                 <Route path={EMULATOR_URL} element={<EmulatorPage/>}/>
                 <Route path={FIRMWARES_URL} element={<FirmwaresPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId`} element={<FirmwarePage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/apps`} element={<AppsPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/apps/:appId`} element={<AppPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/apps/:appId/reports`} element={<ReportsPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/apps/:appId/reports/:reportId`} element={<ReportPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/files`} element={<FilesPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId/files/:fileId`} element={<FilePage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}`} element={<AppsPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId`} element={<AppPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}`} element={<ReportsPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}/:reportId`} element={<ReportPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}`} element={<FilesPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}/:fileId`} element={<FilePage/>}/>
                 <Route path={APPS_URL} element={<AppsPage/>}/>
                 <Route path={REPORTS_URL} element={<ReportsPage/>}/>
                 <Route path="*" element={<NotFoundPage/>}/>

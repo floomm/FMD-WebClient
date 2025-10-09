@@ -26,6 +26,7 @@ import type {VariantProps} from "class-variance-authority";
 import {cn} from "@/lib/utils.ts";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {WithTypenameMutation} from "@/components/ui/table/action-columns/entity-action-columns.tsx";
+import {SCAN_JOBS_URL} from "@/components/ui/sidebar/app-sidebar.tsx";
 
 const DELETION_JOB_FUNC_NAME = "api.v2.types.GenericDeletion.delete_queryset_background";
 
@@ -172,7 +173,7 @@ function ScanAppActionButton(
                                     scannerName: scanner.id,
                                 }
                             }));
-                            void navigate("/scanner");
+                            void navigate(SCAN_JOBS_URL);
                         }}>Start Scan</Button>
                 </DialogFooter>
             </DialogContent>
