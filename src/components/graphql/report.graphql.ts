@@ -13,9 +13,9 @@ export const REPORT_INFO_WITH_APP_REFERENCE = gql(`
     }
 `);
 
-export const GET_ALL_REPORTS = gql(`
-    query GetAllReports {
-        apk_scanner_report_list {
+export const GET_REPORTS_BY_APP_OBJECT_ID = gql(`
+    query GetReportsByAppObjectId($appObjectId: String) {
+        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {
             ...ReportInfoWithAppReference
         }
     }

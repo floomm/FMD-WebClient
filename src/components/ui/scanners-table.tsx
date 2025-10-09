@@ -15,6 +15,7 @@ const columns: ColumnDef<Scanner>[] = [
         id: "id",
         accessorKey: "id",
         header: "Module",
+        enableHiding: false,
     },
 ];
 

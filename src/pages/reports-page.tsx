@@ -4,8 +4,9 @@ import {ReportInfoWithAppReferenceFragment} from "@/__generated__/graphql.ts";
 import {StateHandlingScrollableDataTable} from "@/components/ui/table/data-table.tsx";
 import {useQuery} from "@apollo/client";
 import {useFragment} from "@/__generated__";
-import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
-import {GET_ALL_REPORTS, REPORT_INFO_WITH_APP_REFERENCE} from "@/components/graphql/report.graphql.ts";
+import {convertIdToObjectId, isNonNullish} from "@/lib/graphql/graphql-utils.ts";
+import {GET_REPORTS_BY_APP_OBJECT_ID, REPORT_INFO_WITH_APP_REFERENCE} from "@/components/graphql/report.graphql.ts";
+import {useParams} from "react-router";
 
 const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
     {
@@ -37,11 +38,19 @@ const columns: ColumnDef<ReportInfoWithAppReferenceFragment>[] = [
 ];
 
 export function ReportsPage() {
+    const {appId} = useParams<{ appId?: string }>();
+
+    let appObjectId: string | undefined;
+    if (appId) {
+        appObjectId = convertIdToObjectId(appId);
+    }
+
     const {
         loading: reportsLoading,
         error: reportsError,
         data: reportsData,
-    } = useQuery(GET_ALL_REPORTS, {
+    } = useQuery(GET_REPORTS_BY_APP_OBJECT_ID, {
+        variables: {appObjectId: appObjectId},
         fetchPolicy: "cache-first",
     });
 

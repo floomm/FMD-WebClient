@@ -14,6 +14,7 @@ import {FilePage} from "@/pages/file-page.tsx";
 import {FilesPage} from "@/pages/files-page.tsx";
 import {NotFoundPage} from "@/pages/not-found-page.tsx";
 import {ReportsPage} from "@/pages/reports-page.tsx";
+import {ReportPage} from "@/pages/report-page.tsx";
 
 function App() {
     return (
@@ -31,6 +32,8 @@ function App() {
                 <Route path="/firmwares/:firmwareId" element={<FirmwarePage/>}/>
                 <Route path="/firmwares/:firmwareId/apps" element={<AppsPage/>}/>
                 <Route path="/firmwares/:firmwareId/apps/:appId" element={<AppPage/>}/>
+                <Route path="/firmwares/:firmwareId/apps/:appId/reports" element={<ReportsPage/>}/>
+                <Route path="/firmwares/:firmwareId/apps/:appId/reports/:reportId" element={<ReportPage/>}/>
                 <Route path="/firmwares/:firmwareId/files" element={<FilesPage/>}/>
                 <Route path="/firmwares/:firmwareId/files/:fileId" element={<FilePage/>}/>
                 <Route path="/apps" element={<AppsPage/>}/>

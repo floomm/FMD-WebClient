@@ -5,7 +5,7 @@ import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {APP_ALL, GET_APP_BY_ID, SCAN_APKS_BY_OBJECT_IDS} from "@/components/graphql/app.graphql.ts";
 import {useFragment} from "@/__generated__";
 import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
-import {AlertCircleIcon, FileIcon} from "lucide-react";
+import {AlertCircleIcon, BookOpenIcon, FileIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {AppAllFragment} from "@/__generated__/graphql.ts";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
@@ -55,6 +55,15 @@ export function AppPage() {
         return (
             <BasePage title="App">
                 <div className="w-full flex gap-4 flex-wrap">
+                    <Button
+                        hidden={!app.firmwareIdReference?.id}
+                        size="sm"
+                        onClick={() => {
+                            void navigate(`/firmwares/${app.firmwareIdReference?.id ?? ""}/apps/${appId}/reports`);
+                        }}
+                    >
+                        <BookOpenIcon/> Scan Reports
+                    </Button>
                     <Button
                         hidden={!app.firmwareIdReference?.id || !app.firmwareFileReference?.id}
                         size="sm"

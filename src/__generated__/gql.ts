@@ -36,7 +36,7 @@ type Documents = {
     "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": typeof types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": typeof types.DeleteFirmwareByObjectIdDocument,
     "\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n": typeof types.ReportInfoWithAppReferenceFragmentDoc,
-    "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n": typeof types.GetAllReportsDocument,
+    "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfoWithAppReference\n        }\n    }\n": typeof types.GetReportsByAppObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": typeof types.GetRqJobListDocument,
 };
 const documents: Documents = {
@@ -62,7 +62,7 @@ const documents: Documents = {
     "\n    mutation ScanApksByFirmwareObjectIds($objectIds: [String!]!, $scannerName: String!) {\n        createApkScanJob(\n            firmwareIdList: $objectIds,\n            moduleName: $scannerName,\n            queueName: \"default-python\",\n        ) {\n            jobIdList\n        }\n    }\n": types.ScanApksByFirmwareObjectIdsDocument,
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": types.DeleteFirmwareByObjectIdDocument,
     "\n    fragment ReportInfoWithAppReference on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n        }\n    }\n": types.ReportInfoWithAppReferenceFragmentDoc,
-    "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n": types.GetAllReportsDocument,
+    "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfoWithAppReference\n        }\n    }\n": types.GetReportsByAppObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": types.GetRqJobListDocument,
 };
 
@@ -171,7 +171,7 @@ export function gql(source: "\n    fragment ReportInfoWithAppReference on ApkSca
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n"): (typeof documents)["\n    query GetAllReports {\n        apk_scanner_report_list {\n            ...ReportInfoWithAppReference\n        }\n    }\n"];
+export function gql(source: "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfoWithAppReference\n        }\n    }\n"): (typeof documents)["\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfoWithAppReference\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
