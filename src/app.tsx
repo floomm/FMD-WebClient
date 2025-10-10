@@ -13,8 +13,8 @@ import {AppPage} from "@/pages/app-page.tsx";
 import {FilePage} from "@/pages/file-page.tsx";
 import {FilesPage} from "@/pages/files-page.tsx";
 import {NotFoundPage} from "@/pages/not-found-page.tsx";
-import {ReportsPage} from "@/pages/reports-page.tsx";
-import {ReportPage} from "@/pages/report-page.tsx";
+import {ReportsPage} from "@/pages/reports/reports-page.tsx";
+import {ReportPage} from "@/pages/reports/report-page.tsx";
 import {
     APPS_URL,
     EMULATOR_URL, FILES_URL,
@@ -41,7 +41,7 @@ function App() {
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}`} element={<AppsPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId`} element={<AppPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}`} element={<ReportsPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}/:reportId`} element={<ReportPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}/:scannerName/:reportId`} element={<ReportPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}`} element={<FilesPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}/:fileId`} element={<FilePage/>}/>
                 <Route path={APPS_URL} element={<AppsPage/>}/>

@@ -37,6 +37,8 @@ type Documents = {
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": typeof types.DeleteFirmwareByObjectIdDocument,
     "\n    fragment ReportInfo on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n            firmwareIdReference {\n                id\n            }\n        }\n    }\n": typeof types.ReportInfoFragmentDoc,
     "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfo\n        }\n    }\n": typeof types.GetReportsByAppObjectIdDocument,
+    "\n    fragment ApkidReport on ApkidReportType {\n        id\n        files\n        reportDate\n        rulesSha256\n        scannerName\n        scannerVersion\n        reportFileJson {\n            data\n        }\n    }\n": typeof types.ApkidReportFragmentDoc,
+    "\n    query GetApkidReportByObjectId($reportObjectId: String) {\n        apkid_report_list(objectIdList: [$reportObjectId]) {\n            ...ApkidReport\n        }\n    }\n": typeof types.GetApkidReportByObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": typeof types.GetRqJobListDocument,
 };
 const documents: Documents = {
@@ -63,6 +65,8 @@ const documents: Documents = {
     "\n    mutation DeleteFirmwareByObjectId($objectIds: [String!]!) {\n        deleteAndroidFirmware(firmwareIdList: $objectIds) {\n            jobId\n        }\n    }\n": types.DeleteFirmwareByObjectIdDocument,
     "\n    fragment ReportInfo on ApkScannerReportType {\n        id\n        reportDate\n        scannerName\n        scannerVersion\n        androidAppIdReference {\n            id\n            filename\n            firmwareIdReference {\n                id\n            }\n        }\n    }\n": types.ReportInfoFragmentDoc,
     "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfo\n        }\n    }\n": types.GetReportsByAppObjectIdDocument,
+    "\n    fragment ApkidReport on ApkidReportType {\n        id\n        files\n        reportDate\n        rulesSha256\n        scannerName\n        scannerVersion\n        reportFileJson {\n            data\n        }\n    }\n": types.ApkidReportFragmentDoc,
+    "\n    query GetApkidReportByObjectId($reportObjectId: String) {\n        apkid_report_list(objectIdList: [$reportObjectId]) {\n            ...ApkidReport\n        }\n    }\n": types.GetApkidReportByObjectIdDocument,
     "\n    query GetRqJobList {\n        rq_job_list {\n            description\n            funcName\n            id\n            isFailed\n            isFinished\n            startedAt\n            status\n        }\n    }\n": types.GetRqJobListDocument,
 };
 
@@ -172,6 +176,14 @@ export function gql(source: "\n    fragment ReportInfo on ApkScannerReportType {
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfo\n        }\n    }\n"): (typeof documents)["\n    query GetReportsByAppObjectId($appObjectId: String) {\n        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {\n            ...ReportInfo\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    fragment ApkidReport on ApkidReportType {\n        id\n        files\n        reportDate\n        rulesSha256\n        scannerName\n        scannerVersion\n        reportFileJson {\n            data\n        }\n    }\n"): (typeof documents)["\n    fragment ApkidReport on ApkidReportType {\n        id\n        files\n        reportDate\n        rulesSha256\n        scannerName\n        scannerVersion\n        reportFileJson {\n            data\n        }\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query GetApkidReportByObjectId($reportObjectId: String) {\n        apkid_report_list(objectIdList: [$reportObjectId]) {\n            ...ApkidReport\n        }\n    }\n"): (typeof documents)["\n    query GetApkidReportByObjectId($reportObjectId: String) {\n        apkid_report_list(objectIdList: [$reportObjectId]) {\n            ...ApkidReport\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

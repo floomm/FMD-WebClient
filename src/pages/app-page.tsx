@@ -48,7 +48,7 @@ export function AppPage() {
         .flatMap(firmwareEdge => (firmwareEdge?.node?.androidAppIdList?.edges ?? []))
         // eslint-disable-next-line react-hooks/rules-of-hooks
         .map(edge => useFragment(APP_ALL, edge?.node))
-        .filter(isNonNullish)
+        .filter(isNonNullish);
 
     if (apps.length === 1) {
         const app: AppAllFragment = apps[0];

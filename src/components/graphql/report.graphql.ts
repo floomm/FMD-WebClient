@@ -23,3 +23,29 @@ export const GET_REPORTS_BY_APP_OBJECT_ID = gql(`
         }
     }
 `);
+
+// ----------------------------------------------------------------------------------------------------
+// APKiD REPORT
+// ----------------------------------------------------------------------------------------------------
+
+export const APKID_REPORT = gql(`
+    fragment ApkidReport on ApkidReportType {
+        id
+        files
+        reportDate
+        rulesSha256
+        scannerName
+        scannerVersion
+        reportFileJson {
+            data
+        }
+    }
+`);
+
+export const GET_APKID_REPORT_BY_OBJECT_ID = gql(`
+    query GetApkidReportByObjectId($reportObjectId: String) {
+        apkid_report_list(objectIdList: [$reportObjectId]) {
+            ...ApkidReport
+        }
+    }
+`);
