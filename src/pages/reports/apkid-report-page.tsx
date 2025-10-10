@@ -8,15 +8,9 @@ import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {jwtDecode} from "jwt-decode";
+import {ImplReportPageProps} from "@/pages/reports/report-page.tsx";
 
-type ApkidReportPageProps = {
-    reportId: string;
-}
-
-export function ApkidReportPage(
-    {
-        reportId,
-    }: Readonly<ApkidReportPageProps>) {
+export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
     const {
         loading: reportsLoading,
         data: reportsData,

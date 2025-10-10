@@ -13,6 +13,8 @@ export function EntityTable(
         <Table>
             <TableBody>
                 {Object.entries(entity)
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    .filter(([key, _]) => key !== "__typename")
                     .map(([key, value]) => (
                         <TableRow key={key}>
                             <TableCell className="font-medium">{key}</TableCell>

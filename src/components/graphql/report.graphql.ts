@@ -49,3 +49,59 @@ export const GET_APKID_REPORT_BY_OBJECT_ID = gql(`
         }
     }
 `);
+
+// ----------------------------------------------------------------------------------------------------
+// AndroGuard REPORT
+// ----------------------------------------------------------------------------------------------------
+
+export const ANDROGUARD_REPORT = gql(`
+    fragment AndroguardReport on AndroGuardReportType {
+        id
+        activities
+        androidVersionCode
+        androidVersionName
+        appName
+        dexNames
+        effectiveTargetVersion
+        fileNameList
+        intentFiltersDict
+        isAndroidtv
+        isLeanback
+        isMultidex
+        isSignedV1
+        isSignedV2
+        isSignedV3
+        isValidApk
+        isWearable
+        mainActivity
+        mainActivityList
+        manifestFeatures
+        manifestLibraries
+        manifestXml
+        maxSdkVersion
+        minSdkVersion
+        packagename
+        permissionDetails
+        permissions
+        permissionsDeclared
+        permissionsDeclaredDetails
+        permissionsImplied
+        permissionsRequestedThirdParty
+        providers
+        receivers
+        reportDate
+        scannerName
+        scannerVersion
+        services
+        signatureNames
+        targetSdkVersion
+    }
+`);
+
+export const GET_ANDROGUARD_REPORT_BY_OBJECT_ID = gql(`
+    query GetAndroguardReportByObjectId($reportObjectId: String) {
+        androguard_report_list(objectIdList: [$reportObjectId]) {
+            ...AndroguardReport
+        }
+    }
+`);
