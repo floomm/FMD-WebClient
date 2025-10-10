@@ -4,27 +4,20 @@ import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
 import {AlertCircleIcon} from "lucide-react";
 import {ApkidReportPage} from "@/pages/reports/apkid-report-page.tsx";
 import {AndroGuardReportPage} from "@/pages/reports/andro-guard-report-page.tsx";
+import {Skeleton} from "@/components/ui/skeleton.tsx";
 
 export type ImplReportPageProps = {
     reportId: string;
 }
 
-export function ReportPage() {
-    const {scannerNameAndReportId} = useParams<{ scannerNameAndReportId: string; }>();
-
-    if (!scannerNameAndReportId) {
-        return (
-            <BasePage title={"Unexpected Error"}>
-                <Alert variant="destructive">
-                    <AlertCircleIcon/>
-                    <AlertTitle>Failed to identify the requested report.</AlertTitle>
-                </Alert>
-            </BasePage>
-        );
-    }
-
-    const [scannerName, reportId] = scannerNameAndReportId.split("-");
-
+function SpecificReportPage(
+    {
+        scannerName,
+        reportId,
+    }: {
+        scannerName: string;
+        reportId: string;
+    }) {
     switch (scannerName) {
         case "AndroGuard":
             return (
@@ -44,6 +37,34 @@ export function ReportPage() {
                     </Alert>
                 </BasePage>
             );
-
     }
+}
+
+export function ReportPage() {
+    const {scannerNameAndReportId} = useParams<{ scannerNameAndReportId: string; }>();
+
+    if (!scannerNameAndReportId) {
+        return (
+            <BasePage title={"Unexpected Error"}>
+                <Alert variant="destructive">
+                    <AlertCircleIcon/>
+                    <AlertTitle>Failed to identify the requested report.</AlertTitle>
+                </Alert>
+            </BasePage>
+        );
+    }
+
+    const [scannerName, reportId] = scannerNameAndReportId.split("-");
+
+    return (
+        <SpecificReportPage scannerName={scannerName} reportId={reportId}/>
+    );
+}
+
+export function ReportLoadingPage() {
+    return (
+        <BasePage title="Report loading...">
+            <Skeleton className="w-full h-[400px]"/>
+        </BasePage>
+    );
 }

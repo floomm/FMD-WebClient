@@ -4,11 +4,18 @@ import {useFragment} from "@/__generated__";
 import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {BasePage} from "@/pages/base-page.tsx";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
-import {Alert, AlertTitle} from "@/components/ui/alert.tsx";
-import {AlertCircleIcon} from "lucide-react";
-import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {jwtDecode} from "jwt-decode";
-import {ImplReportPageProps} from "@/pages/reports/report-page.tsx";
+import {ImplReportPageProps, ReportLoadingPage} from "@/pages/reports/report-page.tsx";
+import {ApkidReportFragment} from "@/__generated__/graphql.ts";
+
+function enrichReport(report: ApkidReportFragment, token: string) {
+    const decodedJwtHeader = jwtDecode(token, {header: true});
+
+    return {
+        ...report,
+        decodedJwtHeader,
+    };
+}
 
 export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
     const {
@@ -21,9 +28,7 @@ export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
 
     if (reportsLoading) {
         return (
-            <BasePage title="Report loading...">
-                <Skeleton className="w-full h-[400px]"/>
-            </BasePage>
+            <ReportLoadingPage/>
         );
     }
 
@@ -32,51 +37,19 @@ export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
         .map(report => useFragment(APKID_REPORT, report))
         .filter(isNonNullish);
 
-    if (reports.length === 1) {
-        const report = reports[0];
+    const report = reports[0];
 
-        if (report.reportFileJson.data) {
-            const token = report.reportFileJson.data;
-            const decodedJwtHeader = jwtDecode(token, {header: true});
-
-            const enrichedReport = {
-                ...report,
-                decodedJwtHeader,
-            };
-
-            return (
-                <BasePage title={`Report (APKiD)`}>
-                    <EntityTable entity={enrichedReport}/>
-                </BasePage>
-            );
-        }
-
+    if (report.reportFileJson.data) {
         return (
             <BasePage title={`Report (APKiD)`}>
-                <EntityTable entity={report}/>
+                <EntityTable entity={enrichReport(report, report.reportFileJson.data)}/>
             </BasePage>
         );
     }
 
-    if (reports.length < 1) {
-        return (
-            <BasePage title={"Report (no match)"}>
-                <Alert variant="destructive">
-                    <AlertCircleIcon/>
-                    <AlertTitle>Could not find a report with ID '{reportId}'.</AlertTitle>
-                </Alert>
-            </BasePage>
-        );
-    }
-
-    if (reports.length > 1) {
-        return (
-            <BasePage title={"Report (multiple matches)"}>
-                <Alert variant="destructive">
-                    <AlertCircleIcon/>
-                    <AlertTitle>Found multiple reports with ID '{reportId}'.</AlertTitle>
-                </Alert>
-            </BasePage>
-        );
-    }
+    return (
+        <BasePage title={`Report (APKiD)`}>
+            <EntityTable entity={report}/>
+        </BasePage>
+    );
 }
