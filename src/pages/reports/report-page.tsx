@@ -5,6 +5,7 @@ import {AlertCircleIcon} from "lucide-react";
 import {ApkidReportPage} from "@/pages/reports/apkid-report-page.tsx";
 import {AndroGuardReportPage} from "@/pages/reports/andro-guard-report-page.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
+import {ExodusReportPage} from "@/pages/reports/exodus-report-page.tsx";
 
 export type ImplReportPageProps = {
     reportId: string;
@@ -26,6 +27,10 @@ function SpecificReportPage(
         case "APKiD":
             return (
                 <ApkidReportPage reportId={reportId}/>
+            );
+        case "Exodus":
+            return (
+                <ExodusReportPage reportId={reportId}/>
             );
         default:
             return (

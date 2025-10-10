@@ -32,13 +32,13 @@ export const APKID_REPORT = gql(`
     fragment ApkidReport on ApkidReportType {
         id
         files
-        reportDate
         rulesSha256
-        scannerName
-        scannerVersion
         reportFileJson {
             data
         }
+        reportDate
+        scannerName
+        scannerVersion
     }
 `);
 
@@ -89,12 +89,12 @@ export const ANDROGUARD_REPORT = gql(`
         permissionsRequestedThirdParty
         providers
         receivers
-        reportDate
-        scannerName
-        scannerVersion
         services
         signatureNames
         targetSdkVersion
+        reportDate
+        scannerName
+        scannerVersion
     }
 `);
 
@@ -102,6 +102,28 @@ export const GET_ANDROGUARD_REPORT_BY_OBJECT_ID = gql(`
     query GetAndroguardReportByObjectId($reportObjectId: String) {
         androguard_report_list(objectIdList: [$reportObjectId]) {
             ...AndroguardReport
+        }
+    }
+`);
+
+// ----------------------------------------------------------------------------------------------------
+// Exodus REPORT
+// ----------------------------------------------------------------------------------------------------
+
+export const EXODUS_REPORT = gql(`
+    fragment ExodusReport on ExodusReportType {
+        id
+        results
+        reportDate
+        scannerName
+        scannerVersion
+    }
+`);
+
+export const GET_EXODUS_REPORT_BY_OBJECT_ID = gql(`
+    query GetExodusReportByObjectId($reportObjectId: String) {
+        exodus_report_list(objectIdList: [$reportObjectId]) {
+            ...ExodusReport
         }
     }
 `);
