@@ -41,7 +41,7 @@ function App() {
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}`} element={<AppsPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId`} element={<AppPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}`} element={<ReportsPage/>}/>
-                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}/:scannerName/:reportId`} element={<ReportPage/>}/>
+                <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}/:appId${REPORTS_URL}/:scannerNameAndReportId`} element={<ReportPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}`} element={<FilesPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${FILES_URL}/:fileId`} element={<FilePage/>}/>
                 <Route path={APPS_URL} element={<AppsPage/>}/>

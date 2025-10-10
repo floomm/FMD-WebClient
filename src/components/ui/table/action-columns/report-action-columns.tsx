@@ -38,7 +38,7 @@ export function buildViewReportColumn<T extends WithIdAndAppIdAndFirmwareId>(): 
                                 <TooltipTrigger asChild>
                                     <ActionButton
                                         variant="outline"
-                                        onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}${APPS_URL}/${appId}${REPORTS_URL}/${scannerName}/${reportId}`)}
+                                        onClick={() => void navigate(`${FIRMWARES_URL}/${firmwareId}${APPS_URL}/${appId}${REPORTS_URL}/${scannerName}-${reportId}`)}
                                     >
                                         <EyeIcon className="size-5"/>
                                     </ActionButton>

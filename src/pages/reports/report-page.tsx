@@ -5,18 +5,20 @@ import {AlertCircleIcon} from "lucide-react";
 import {ApkidReportPage} from "@/pages/reports/apkid-report-page.tsx";
 
 export function ReportPage() {
-    const {scannerName, reportId} = useParams<{ scannerName: string; reportId: string; }>();
+    const {scannerNameAndReportId} = useParams<{ scannerNameAndReportId: string; }>();
 
-    if (!reportId) {
+    if (!scannerNameAndReportId) {
         return (
-            <BasePage title={"Report (missing ID)"}>
+            <BasePage title={"Unexpected Error"}>
                 <Alert variant="destructive">
                     <AlertCircleIcon/>
-                    <AlertTitle>Missing Report ID.</AlertTitle>
+                    <AlertTitle>Failed to identify the requested report.</AlertTitle>
                 </Alert>
             </BasePage>
         );
     }
+
+    const [scannerName, reportId] = scannerNameAndReportId.split("-");
 
     switch (scannerName) {
         case "APKiD":
