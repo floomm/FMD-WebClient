@@ -48,7 +48,7 @@ export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
     }
 
     return (
-        <BasePage title={`Report (APKiD)`}>
+        <BasePage title={`Report (${report.scannerName})`}>
             <EntityTable entity={report}/>
         </BasePage>
     );

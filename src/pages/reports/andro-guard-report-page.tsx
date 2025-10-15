@@ -32,7 +32,7 @@ export function AndroGuardReportPage({reportId}: Readonly<ImplReportPageProps>) 
     const report = reports[0];
 
     return (
-        <BasePage title={`Report (AndroGuard)`}>
+        <BasePage title={`Report (${report.scannerName})`}>
             <EntityTable entity={report}/>
         </BasePage>
     );

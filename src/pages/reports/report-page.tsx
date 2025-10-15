@@ -6,6 +6,7 @@ import {ApkidReportPage} from "@/pages/reports/apkid-report-page.tsx";
 import {AndroGuardReportPage} from "@/pages/reports/andro-guard-report-page.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {ExodusReportPage} from "@/pages/reports/exodus-report-page.tsx";
+import {ApkleaksReportPage} from "@/pages/reports/apkleaks-report.tsx";
 
 export type ImplReportPageProps = {
     reportId: string;
@@ -15,10 +16,10 @@ function SpecificReportPage(
     {
         scannerName,
         reportId,
-    }: {
+    }: Readonly<{
         scannerName: string;
         reportId: string;
-    }) {
+    }>) {
     switch (scannerName) {
         case "AndroGuard":
             return (
@@ -27,6 +28,10 @@ function SpecificReportPage(
         case "APKiD":
             return (
                 <ApkidReportPage reportId={reportId}/>
+            );
+        case "APKLeaks":
+            return (
+                <ApkleaksReportPage reportId={reportId}/>
             );
         case "Exodus":
             return (

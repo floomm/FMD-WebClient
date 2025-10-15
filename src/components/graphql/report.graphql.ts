@@ -29,6 +29,7 @@ export const GET_SCANNER_REPORT = gql(`
         $reportObjectId: String
         $wantAndroguard: Boolean! = false
         $wantApkid: Boolean! = false
+        $wantApkleaks: Boolean! = false
         $wantExodus: Boolean! = false
     ) {
         apk_scanner_report_list(fieldFilter: {id: $reportObjectId}) {
@@ -44,6 +45,9 @@ export const GET_SCANNER_REPORT = gql(`
                 }
                 apkidReport: apkidReportReference @include(if: $wantApkid) {
                     ...ApkidReport
+                }
+                apkleaksReport: apkleaksReportReference @include(if: $wantApkleaks) {
+                    ...ApkleaksReport
                 }
                 exodusReport: exodusReportReference @include(if: $wantExodus) {
                     ...ExodusReport
@@ -113,6 +117,20 @@ export const APKID_REPORT = gql(`
         reportFileJson {
             data
         }
+        reportDate
+        scannerName
+        scannerVersion
+    }
+`);
+
+// ----------------------------------------------------------------------------------------------------
+// APKLeaks REPORT
+// ----------------------------------------------------------------------------------------------------
+
+export const APKLEAKS_REPORT = gql(`
+    fragment ApkleaksReport on ApkleaksReportType {
+        id
+        results
         reportDate
         scannerName
         scannerVersion
