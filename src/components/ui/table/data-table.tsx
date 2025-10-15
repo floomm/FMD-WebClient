@@ -37,6 +37,7 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     onRowSelectionChange?: (selectedRows: TData[]) => void;
+    dataTablePagination?: boolean;
 }
 
 function DataTable<TData, TValue>(
@@ -45,6 +46,7 @@ function DataTable<TData, TValue>(
         columns,
         data,
         onRowSelectionChange,
+        dataTablePagination = true,
     }: Readonly<DataTableProps<TData, TValue>>
 ) {
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -55,11 +57,16 @@ function DataTable<TData, TValue>(
         )
     );
     const [rowSelection, setRowSelection] = useState({});
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: dataTablePagination ? 25 : Number.MAX_SAFE_INTEGER,
+    });
 
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        onPaginationChange: setPagination,
         getPaginationRowModel: getPaginationRowModel(),
         enableRowSelection: true,
         onSortingChange: setSorting,
@@ -70,6 +77,7 @@ function DataTable<TData, TValue>(
             sorting,
             columnVisibility,
             rowSelection,
+            pagination,
         },
     });
 
@@ -82,7 +90,8 @@ function DataTable<TData, TValue>(
         if (!onRowSelectionChangeRef.current) return;
         const selectedRows = table.getSelectedRowModel().flatRows.map(row => row.original);
         onRowSelectionChangeRef.current(selectedRows);
-    }, [rowSelection]); // Ignore ESLint here, we need the effect whenever row selection changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rowSelection]);
 
     return (
         <div className={cn(className)}>
@@ -138,7 +147,7 @@ function DataTable<TData, TValue>(
                     {table.getFilteredSelectedRowModel().rows.length} of{" "}
                     {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
-                <DataTablePagination table={table}/>
+                {dataTablePagination && <DataTablePagination table={table}/>}
             </div>
         </div>
     );
@@ -149,6 +158,7 @@ function ScrollableDataTable<TData, TValue>(
         columns,
         data,
         onRowSelectionChange,
+        dataTablePagination,
     }: Readonly<DataTableProps<TData, TValue>>
 ) {
     return (
@@ -157,6 +167,7 @@ function ScrollableDataTable<TData, TValue>(
                 columns={columns}
                 data={data}
                 onRowSelectionChange={onRowSelectionChange}
+                dataTablePagination={dataTablePagination}
             />
             <ScrollBar orientation="horizontal"/>
         </ScrollArea>
@@ -168,6 +179,7 @@ function StateHandlingScrollableDataTable<TData, TValue>(
         columns,
         data,
         onRowSelectionChange,
+        dataTablePagination,
         idsLoading,
         dataLoading,
         idsError,
@@ -206,6 +218,7 @@ function StateHandlingScrollableDataTable<TData, TValue>(
                     columns={columns}
                     data={data}
                     onRowSelectionChange={onRowSelectionChange}
+                    dataTablePagination={dataTablePagination}
                 />
             )}
         </>

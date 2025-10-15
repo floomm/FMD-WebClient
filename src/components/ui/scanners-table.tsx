@@ -40,6 +40,7 @@ export function ScannersTable(
             onRowSelectionChange={(selectedRows: Scanner[]) => {
                 setSelectedScanners(selectedRows);
             }}
+            dataTablePagination={false}
         />
     );
 }
