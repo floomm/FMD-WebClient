@@ -1,11 +1,16 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GlobalStyles} from "../assets/emulator/theming/global.js";
 import {ThemeProvider} from "styled-components";
 import {useDarkMode} from "../hooks/emulator/theming/useDarkMode.js";
 import {darkTheme, lightTheme} from "../assets/emulator/theming/theme.js";
-import {Button} from "@/components/ui/button.js";
+import {Button, ButtonGroup, Col, Container, Form, InputGroup, Row, Spinner, ToggleButton} from "react-bootstrap";
+import {MapPin} from "lucide-react";
 
 function EmulatorPage() {
+    useEffect(() => {
+        import("bootstrap/dist/css/bootstrap.min.css");
+    }, []);
+
     const emulatorUrisFromStorage = JSON.parse(sessionStorage.getItem('emulatorUris')) || [];
     const radiosEmulatorView = [{name: 'WebRTC', value: 'webrtc'}, {name: 'PNG', value: 'png'},]
     const [emulatorViewCounter, setEmulatorViewCounter] = useState(2);
