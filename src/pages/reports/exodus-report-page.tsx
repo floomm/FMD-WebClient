@@ -1,6 +1,9 @@
 import {ImplReportPageProps, ReportLoadingPage} from "@/pages/reports/report-page.tsx";
 import {useQuery} from "@apollo/client";
-import {EXODUS_REPORT, GET_EXODUS_REPORT_BY_OBJECT_ID} from "@/components/graphql/report.graphql.ts";
+import {
+    EXODUS_REPORT,
+    GET_SCANNER_REPORT
+} from "@/components/graphql/report.graphql.ts";
 import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {BasePage} from "@/pages/base-page.tsx";
 import {EntityTable} from "@/components/ui/entity-table.tsx";
@@ -10,8 +13,8 @@ export function ExodusReportPage({reportId}: Readonly<ImplReportPageProps>) {
     const {
         loading: reportsLoading,
         data: reportsData,
-    } = useQuery(GET_EXODUS_REPORT_BY_OBJECT_ID, {
-        variables: {reportObjectId: reportId},
+    } = useQuery(GET_SCANNER_REPORT, {
+        variables: {reportObjectId: reportId, wantExodus: true},
         skip: !reportId,
     });
 
@@ -21,9 +24,9 @@ export function ExodusReportPage({reportId}: Readonly<ImplReportPageProps>) {
         );
     }
 
-    const reports = (reportsData?.exodus_report_list ?? [])
+    const reports = (reportsData?.apk_scanner_report_list ?? [])
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        .map(report => useFragment(EXODUS_REPORT, report))
+        .map(report => useFragment(EXODUS_REPORT, report?.androidAppIdReference.exodusReport))
         .filter(isNonNullish);
 
     const report = reports[0];

@@ -2,7 +2,7 @@ import {ImplReportPageProps, ReportLoadingPage} from "@/pages/reports/report-pag
 import {useQuery} from "@apollo/client";
 import {
     ANDROGUARD_REPORT,
-    GET_ANDROGUARD_REPORT_BY_OBJECT_ID,
+    GET_SCANNER_REPORT,
 } from "@/components/graphql/report.graphql.ts";
 import {BasePage} from "@/pages/base-page.tsx";
 import {useFragment} from "@/__generated__";
@@ -13,8 +13,8 @@ export function AndroGuardReportPage({reportId}: Readonly<ImplReportPageProps>) 
     const {
         loading: reportsLoading,
         data: reportsData,
-    } = useQuery(GET_ANDROGUARD_REPORT_BY_OBJECT_ID, {
-        variables: {reportObjectId: reportId},
+    } = useQuery(GET_SCANNER_REPORT, {
+        variables: {reportObjectId: reportId, wantAndroguard: true},
         skip: !reportId,
     });
 
@@ -24,9 +24,9 @@ export function AndroGuardReportPage({reportId}: Readonly<ImplReportPageProps>) 
         );
     }
 
-    const reports = (reportsData?.androguard_report_list ?? [])
+    const reports = (reportsData?.apk_scanner_report_list ?? [])
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        .map(report => useFragment(ANDROGUARD_REPORT, report))
+        .map(report => useFragment(ANDROGUARD_REPORT, report?.androidAppIdReference.androguardReport))
         .filter(isNonNullish);
 
     const report = reports[0];

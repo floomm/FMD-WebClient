@@ -1,5 +1,5 @@
 import {useQuery} from "@apollo/client";
-import {APKID_REPORT, GET_APKID_REPORT_BY_OBJECT_ID} from "@/components/graphql/report.graphql.ts";
+import {APKID_REPORT, GET_SCANNER_REPORT} from "@/components/graphql/report.graphql.ts";
 import {useFragment} from "@/__generated__";
 import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {BasePage} from "@/pages/base-page.tsx";
@@ -21,8 +21,8 @@ export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
     const {
         loading: reportsLoading,
         data: reportsData,
-    } = useQuery(GET_APKID_REPORT_BY_OBJECT_ID, {
-        variables: {reportObjectId: reportId},
+    } = useQuery(GET_SCANNER_REPORT, {
+        variables: {reportObjectId: reportId, wantApkid: true},
         skip: !reportId,
     });
 
@@ -32,9 +32,9 @@ export function ApkidReportPage({reportId}: Readonly<ImplReportPageProps>) {
         );
     }
 
-    const reports = (reportsData?.apkid_report_list ?? [])
+    const reports = (reportsData?.apk_scanner_report_list ?? [])
         // eslint-disable-next-line react-hooks/rules-of-hooks
-        .map(report => useFragment(APKID_REPORT, report))
+        .map(report => useFragment(APKID_REPORT, report?.androidAppIdReference.apkidReport))
         .filter(isNonNullish);
 
     const report = reports[0];

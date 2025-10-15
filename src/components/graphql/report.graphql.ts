@@ -1,7 +1,7 @@
 import {gql} from "@/__generated__";
 
-export const REPORT_INFO = gql(`
-    fragment ReportInfo on ApkScannerReportType {
+export const BASIC_REPORT_INFO = gql(`
+    fragment BasicReportInfo on ApkScannerReportType {
         id
         reportDate
         scannerName
@@ -16,36 +16,39 @@ export const REPORT_INFO = gql(`
     }
 `);
 
-export const GET_REPORTS_BY_APP_OBJECT_ID = gql(`
-    query GetReportsByAppObjectId($appObjectId: String) {
-        apk_scanner_report_list(fieldFilter: {android_app_id_reference: $appObjectId}) {
-            ...ReportInfo
+export const GET_REPORT = gql(`
+    query GetReport($reportObjectId: String, $appObjectId: String, $scannerName: String) {
+        apk_scanner_report_list(fieldFilter: {id: $reportObjectId, android_app_id_reference: $appObjectId, scanner_name: $scannerName}) {
+            ...BasicReportInfo
         }
     }
 `);
 
-// ----------------------------------------------------------------------------------------------------
-// APKiD REPORT
-// ----------------------------------------------------------------------------------------------------
-
-export const APKID_REPORT = gql(`
-    fragment ApkidReport on ApkidReportType {
-        id
-        files
-        rulesSha256
-        reportFileJson {
-            data
-        }
-        reportDate
-        scannerName
-        scannerVersion
-    }
-`);
-
-export const GET_APKID_REPORT_BY_OBJECT_ID = gql(`
-    query GetApkidReportByObjectId($reportObjectId: String) {
-        apkid_report_list(objectIdList: [$reportObjectId]) {
-            ...ApkidReport
+export const GET_SCANNER_REPORT = gql(`
+    query GetScannerReport(
+        $reportObjectId: String
+        $wantAndroguard: Boolean! = false
+        $wantApkid: Boolean! = false
+        $wantExodus: Boolean! = false
+    ) {
+        apk_scanner_report_list(fieldFilter: {id: $reportObjectId}) {
+            androidAppIdReference {
+                id
+                filename
+                firmwareIdReference {
+                    id
+                }
+                
+                androguardReport: androguardReportReference @include(if: $wantAndroguard) {
+                    ...AndroguardReport
+                }
+                apkidReport: apkidReportReference @include(if: $wantApkid) {
+                    ...ApkidReport
+                }
+                exodusReport: exodusReportReference @include(if: $wantExodus) {
+                    ...ExodusReport
+                }
+            }
         }
     }
 `);
@@ -98,11 +101,21 @@ export const ANDROGUARD_REPORT = gql(`
     }
 `);
 
-export const GET_ANDROGUARD_REPORT_BY_OBJECT_ID = gql(`
-    query GetAndroguardReportByObjectId($reportObjectId: String) {
-        androguard_report_list(objectIdList: [$reportObjectId]) {
-            ...AndroguardReport
+// ----------------------------------------------------------------------------------------------------
+// APKiD REPORT
+// ----------------------------------------------------------------------------------------------------
+
+export const APKID_REPORT = gql(`
+    fragment ApkidReport on ApkidReportType {
+        id
+        files
+        rulesSha256
+        reportFileJson {
+            data
         }
+        reportDate
+        scannerName
+        scannerVersion
     }
 `);
 
@@ -117,13 +130,5 @@ export const EXODUS_REPORT = gql(`
         reportDate
         scannerName
         scannerVersion
-    }
-`);
-
-export const GET_EXODUS_REPORT_BY_OBJECT_ID = gql(`
-    query GetExodusReportByObjectId($reportObjectId: String) {
-        exodus_report_list(objectIdList: [$reportObjectId]) {
-            ...ExodusReport
-        }
     }
 `);
