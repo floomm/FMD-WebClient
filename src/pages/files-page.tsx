@@ -28,12 +28,12 @@ const columns: ColumnDef<FileAllFragment>[] = [
         header: "Absolute Store Path",
         meta: {hidden: true},
     },
-    // {
-    //     id: "fileSizeBytes",
-    //     accessorKey: "fileSizeBytes",
-    //     header: "File Size (Bytes)",
-    //     meta: {hidden: true},
-    // },
+    {
+        id: "fileSizeBytes",
+        accessorKey: "fileSizeBytes",
+        header: "File Size (Bytes)",
+        meta: {hidden: true},
+    },
     {
         id: "indexedDate",
         accessorKey: "indexedDate",
