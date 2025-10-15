@@ -6,6 +6,19 @@ export const GlobalStyles = createGlobalStyle`
     *::before {
         box-sizing: border-box;
     }
+    
+    :host, #emulator-root, body {
+        min-height: 100%;
+        height: 100%;
+        width: 100%;
+        background: ${({theme}) => theme.body};
+        color: ${({theme}) => theme.text};
+        font-family: BlinkMacSystemFont, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        transition: all 0.25s linear;
+        overflow: auto;
+        margin-bottom: 2%;
+        padding: 0;
+    }
 
     body {
         min-height: 100vh;
@@ -140,9 +153,9 @@ export const GlobalStyles = createGlobalStyle`
     .noUserSelect {
         user-select: none;
     }
-
+    
     .btn-outline-light {
-        --bs-btn-color: #000000;
+        --bs-btn-color: ${({theme}) => theme.text};
         --bs-btn-border-color: #CCCCCC;
     }
 `;
