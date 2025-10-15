@@ -152,7 +152,7 @@ function ScrollableDataTable<TData, TValue>(
     }: Readonly<DataTableProps<TData, TValue>>
 ) {
     return (
-        <ScrollArea className={cn("max-w-max w-full whitespace-nowrap")}>
+        <ScrollArea className={cn("w-full whitespace-nowrap")}>
             <DataTable
                 columns={columns}
                 data={data}
