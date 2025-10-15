@@ -3,7 +3,7 @@ import LoginPage from "@/pages/login-page.tsx";
 import PublicOnlyRoute from "@/routes/public-only-route.tsx";
 import ProtectedLayout from "@/routes/protected-layout.tsx";
 import HomePage from "@/pages/home-page.tsx";
-import EmulatorPage from "@/pages/EmulatorPage";
+import {EmulatorPageWrapper} from "@/pages/EmulatorPageWrapper.tsx";
 import {ImporterPage} from "@/pages/importer-page.tsx";
 import {ScanJobsPage} from "@/pages/scan-jobs-page.tsx";
 import {FirmwaresPage} from "@/pages/firmwares-page.tsx";
@@ -35,7 +35,7 @@ function App() {
                 <Route path="/" element={<HomePage/>}/>
                 <Route path={IMPORTER_URL} element={<ImporterPage/>}/>
                 <Route path={SCAN_JOBS_URL} element={<ScanJobsPage/>}/>
-                <Route path={EMULATOR_URL} element={<EmulatorPage/>}/>
+                <Route path={EMULATOR_URL} element={<EmulatorPageWrapper/>}/>
                 <Route path={FIRMWARES_URL} element={<FirmwaresPage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId`} element={<FirmwarePage/>}/>
                 <Route path={`${FIRMWARES_URL}/:firmwareId${APPS_URL}`} element={<AppsPage/>}/>
