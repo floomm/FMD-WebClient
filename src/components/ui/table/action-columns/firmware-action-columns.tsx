@@ -47,6 +47,7 @@ export function buildFirmwareActionColumns<T extends WithId>(
     scanAppMutation: TypedDocumentNode<ScanApksByFirmwareObjectIdsMutation, Exact<{
         objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
         scannerName: Scalars["String"]["input"]
+        queueName: Scalars["String"]["input"]
     }>>,
 ): ColumnDef<T>[] {
     return [

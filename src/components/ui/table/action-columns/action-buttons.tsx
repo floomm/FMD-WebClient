@@ -27,6 +27,7 @@ import {cn} from "@/lib/utils.ts";
 import {GET_RQ_JOB_LIST} from "@/components/graphql/rq-job.graphql.ts";
 import {WithTypenameMutation} from "@/components/ui/table/action-columns/entity-action-columns.tsx";
 import {SCAN_JOBS_URL} from "@/components/ui/sidebar/app-sidebar.tsx";
+import {RqJobQueuesDropdownMenu} from "@/components/rq-jobs/rq-job-queues-dropdown-menu.tsx";
 
 const DELETION_JOB_FUNC_NAME = "api.v2.types.GenericDeletion.delete_queryset_background";
 
@@ -137,10 +138,12 @@ function ScanAppActionButton(
         mutation: TypedDocumentNode<ScanApksByObjectIdsMutation | ScanApksByFirmwareObjectIdsMutation, Exact<{
             objectIds: Array<Scalars["String"]["input"]> | Scalars["String"]["input"]
             scannerName: Scalars["String"]["input"]
+            queueName: Scalars["String"]["input"]
         }>>;
     }>
 ) {
     const [selectedScanners, setSelectedScanners] = useState<Scanner[]>([]);
+    const [selectedQueue, setSelectedQueue] = useState<string>("");
     const [scanApk] = useMutation(mutation);
     const navigate = useNavigate();
 
@@ -164,25 +167,30 @@ function ScanAppActionButton(
                 </DialogHeader>
                 <ScannersTable setSelectedScanners={setSelectedScanners}/>
                 <DialogFooter>
-                    <Button
-                        disabled={selectedScanners.length <= 0}
-                        onClick={() => {
-                            selectedScanners.forEach((scanner) => void scanApk({
-                                variables: {
-                                    objectIds: ids.map(id => convertIdToObjectId(id)),
-                                    scannerName: scanner.id,
-                                }
-                            }));
-                            void navigate(SCAN_JOBS_URL);
-                        }}>Start Scan</Button>
+                    <>
+                        <RqJobQueuesDropdownMenu onSelect={setSelectedQueue}/>
+                        <Button
+                            disabled={selectedScanners.length <= 0}
+                            onClick={() => {
+                                selectedScanners.forEach((scanner) => void scanApk({
+                                    variables: {
+                                        objectIds: ids.map(id => convertIdToObjectId(id)),
+                                        scannerName: scanner.id,
+                                        queueName: selectedQueue,
+                                    }
+                                }));
+                                void navigate(SCAN_JOBS_URL);
+                            }}>Start Scan</Button>
+                    </>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 }
 
-export {
+    export
+{
     ActionButton,
-    ScanAppActionButton,
-    DeleteEntityButton,
+        ScanAppActionButton,
+        DeleteEntityButton,
 }
