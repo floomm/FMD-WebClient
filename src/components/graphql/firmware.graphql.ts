@@ -44,12 +44,27 @@ export const FIRMWARE_ALL = gql(`
 `);
 
 export const GET_FIRMWARES_BY_OBJECT_IDS = gql(`
-    query GetFirmwaresByObjectIds($objectIds: [String!]) {
-        android_firmware_connection(objectIdList: $objectIds) {
+    query GetFirmwaresByObjectIds(
+        $objectIds: [String!]
+        $first: Int
+        $after: String
+    ) {
+        android_firmware_connection(
+            objectIdList: $objectIds
+            first: $first
+            after: $after
+        ) {
             edges {
+                cursor
                 node {
                     ...FirmwareAll
                 }
+            }
+            pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
             }
         }
     }
