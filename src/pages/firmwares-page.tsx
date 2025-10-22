@@ -11,7 +11,7 @@ import {isNonNullish} from "@/lib/graphql/graphql-utils.ts";
 import {useFragment} from "@/__generated__";
 import {buildFirmwareActionColumns} from "@/components/data-table-action-columns/firmware-action-columns.tsx";
 import {useEffect, useState} from "react";
-import {CursorPagination} from "@/components/ui/table/cursor-pagination.tsx";
+import {CursorPaginationProps} from "@/components/ui/table/cursor-pagination.tsx";
 
 const columns: ColumnDef<FirmwareAllFragment>[] = [
     ...buildFirmwareActionColumns<FirmwareAllFragment>(SCAN_APKS_BY_FIRMWARE_OBJECT_IDS),
@@ -153,6 +153,15 @@ export function FirmwaresPage() {
         setPageSize(n);
     }
 
+    const cursorPagination: CursorPaginationProps = {
+        pageSize: pageSize,
+        onPageSizeChange: onPageSizeChange,
+        hasPrevious: afterStack.length > 1,
+        hasNext: Boolean(pageInfo?.hasNextPage),
+        onPrevious: goPrevious,
+        onNext: goNext,
+    }
+
     return (
         <BasePage title="Firmwares">
             <StateHandlingScrollableDataTable
@@ -160,15 +169,7 @@ export function FirmwaresPage() {
                 data={firmwares}
                 dataLoading={loading}
                 dataError={error}
-                dataTablePagination={false}
-            />
-            <CursorPagination
-                pageSize={pageSize}
-                onPageSizeChange={onPageSizeChange}
-                hasPrevious={afterStack.length > 1}
-                hasNext={Boolean(pageInfo?.hasNextPage)}
-                onPrevious={goPrevious}
-                onNext={goNext}
+                cursorPagination={cursorPagination}
             />
         </BasePage>
     );

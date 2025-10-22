@@ -7,7 +7,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-interface Props {
+export interface CursorPaginationProps {
     pageSize: number;
     onPageSizeChange: (n: number) => void;
     hasPrevious: boolean;
@@ -25,7 +25,7 @@ export function CursorPagination({
                                      onPrevious,
                                      onNext,
                                      loading,
-                                 }: Readonly<Props>) {
+                                 }: Readonly<CursorPaginationProps>) {
     return (
         <div className="flex items-center justify-between px-2 py-4">
             <div className="flex items-center space-x-6 lg:space-x-8">
